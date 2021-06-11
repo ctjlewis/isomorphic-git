@@ -8,7 +8,7 @@ import { dirname } from '../utils/dirname.js'
  * This is just a collection of helper functions really. At least that's how it started.
  */
 export class FileSystem {
-  constructor(fs, plimit) {
+  constructor(fs, plimit = Infinity) {
     /**
      * Set the `this.limit(async () => {})` hook.
      */
