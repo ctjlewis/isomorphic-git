@@ -1,11 +1,11 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { AlreadyExistsError } from '../errors/AlreadyExistsError.js'
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { GitAnnotatedTag } from '../models/GitAnnotatedTag'
-import { _readObject as readObject } from '../storage/readObject.js'
-import { _writeObject as writeObject } from '../storage/writeObject.js'
+import { AlreadyExistsError } from "../errors/AlreadyExistsError.js";
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { GitAnnotatedTag } from "../models/GitAnnotatedTag";
+import { _readObject as readObject } from "../storage/readObject.js";
+import { _writeObject as writeObject } from "../storage/writeObject.js";
 
 /**
  * Create an annotated tag.
@@ -53,39 +53,39 @@ export async function _annotatedTag({
   gpgsig,
   object,
   signingKey,
-  force = false,
+  force = false
 }) {
-  ref = ref.startsWith('refs/tags/') ? ref : `refs/tags/${ref}`
+  ref = ref.startsWith("refs/tags/") ? ref : `refs/tags/${ref}`;
 
   if (!force && (await GitRefManager.exists({ fs, gitdir, ref }))) {
-    throw new AlreadyExistsError('tag', ref)
+    throw new AlreadyExistsError("tag", ref);
   }
 
   // Resolve passed value
   const oid = await GitRefManager.resolve({
     fs,
     gitdir,
-    ref: object || 'HEAD',
-  })
+    ref: object || "HEAD"
+  });
 
-  const { type } = await readObject({ fs, cache, gitdir, oid })
+  const { type } = await readObject({ fs, cache, gitdir, oid });
   let tagObject = GitAnnotatedTag.from({
     object: oid,
     type,
-    tag: ref.replace('refs/tags/', ''),
+    tag: ref.replace("refs/tags/", ""),
     tagger,
     message,
-    gpgsig,
-  })
+    gpgsig
+  });
   if (signingKey) {
-    tagObject = await GitAnnotatedTag.sign(tagObject, onSign, signingKey)
+    tagObject = await GitAnnotatedTag.sign(tagObject, onSign, signingKey);
   }
   const value = await writeObject({
     fs,
     gitdir,
-    type: 'tag',
-    object: tagObject.toObject(),
-  })
+    type: "tag",
+    object: tagObject.toObject()
+  });
 
-  await GitRefManager.writeRef({ fs, gitdir, ref, value })
+  await GitRefManager.writeRef({ fs, gitdir, ref, value });
 }

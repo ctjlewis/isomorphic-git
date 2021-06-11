@@ -1,8 +1,8 @@
 // @ts-check
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * List tags
@@ -19,13 +19,13 @@ import { join } from '../utils/join.js'
  * console.log(tags)
  *
  */
-export async function listTags({ fs, dir, gitdir = join(dir, '.git') }) {
+export async function listTags({ fs, dir, gitdir = join(dir, ".git") }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    return GitRefManager.listTags({ fs: new FileSystem(fs), gitdir })
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    return GitRefManager.listTags({ fs: new FileSystem(fs), gitdir });
   } catch (err) {
-    err.caller = 'git.listTags'
-    throw err
+    err.caller = "git.listTags";
+    throw err;
   }
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import { MaxDepthError } from '../errors/MaxDepthError.js'
-import { MissingParameterError } from '../errors/MissingParameterError.js'
-import { ObjectTypeError } from '../errors/ObjectTypeError.js'
-import { GitShallowManager } from '../managers/GitShallowManager.js'
-import { GitCommit } from '../models/GitCommit.js'
-import { _readObject } from '../storage/readObject.js'
+import { MaxDepthError } from "../errors/MaxDepthError.js";
+import { MissingParameterError } from "../errors/MissingParameterError.js";
+import { ObjectTypeError } from "../errors/ObjectTypeError.js";
+import { GitShallowManager } from "../managers/GitShallowManager.js";
+import { GitCommit } from "../models/GitCommit.js";
+import { _readObject } from "../storage/readObject.js";
 
 /**
  * @param {object} args
@@ -23,48 +23,48 @@ export async function _isDescendent({
   gitdir,
   oid,
   ancestor,
-  depth,
+  depth
 }) {
-  const shallows = await GitShallowManager.read({ fs, gitdir })
+  const shallows = await GitShallowManager.read({ fs, gitdir });
   if (!oid) {
-    throw new MissingParameterError('oid')
+    throw new MissingParameterError("oid");
   }
   if (!ancestor) {
-    throw new MissingParameterError('ancestor')
+    throw new MissingParameterError("ancestor");
   }
   // If you don't like this behavior, add your own check.
   // Edge cases are hard to define a perfect solution.
-  if (oid === ancestor) return false
+  if (oid === ancestor) return false;
   // We do not use recursion here, because that would lead to depth-first traversal,
   // and we want to maintain a breadth-first traversal to avoid hitting shallow clone depth cutoffs.
-  const queue = [oid]
-  const visited = new Set()
-  let searchdepth = 0
+  const queue = [oid];
+  const visited = new Set();
+  let searchdepth = 0;
   while (queue.length) {
     if (searchdepth++ === depth) {
-      throw new MaxDepthError(depth)
+      throw new MaxDepthError(depth);
     }
-    const oid = queue.shift()
+    const oid = queue.shift();
     const { type, object } = await _readObject({
       fs,
       cache,
       gitdir,
-      oid,
-    })
-    if (type !== 'commit') {
-      throw new ObjectTypeError(oid, type, 'commit')
+      oid
+    });
+    if (type !== "commit") {
+      throw new ObjectTypeError(oid, type, "commit");
     }
-    const commit = GitCommit.from(object).parse()
+    const commit = GitCommit.from(object).parse();
     // Are any of the parents the sought-after ancestor?
     for (const parent of commit.parent) {
-      if (parent === ancestor) return true
+      if (parent === ancestor) return true;
     }
     // If not, add them to heads (unless we know this is a shallow commit)
     if (!shallows.has(oid)) {
       for (const parent of commit.parent) {
         if (!visited.has(parent)) {
-          queue.push(parent)
-          visited.add(parent)
+          queue.push(parent);
+          visited.add(parent);
         }
       }
     }
@@ -73,5 +73,5 @@ export async function _isDescendent({
     // different branches cloned to different depths, you would hit this error at the same time
     // for all parents, so trying to continue is futile.
   }
-  return false
+  return false;
 }

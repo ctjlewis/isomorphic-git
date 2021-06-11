@@ -1,7 +1,7 @@
 /* eslint-env browser */
-import '../../typedefs-http.js'
-import { collect } from '../../utils/collect.js'
-import { fromStream } from '../../utils/fromStream'
+import "../../typedefs-http.js";
+import { collect } from "../../utils/collect.js";
+import { fromStream } from "../../utils/fromStream";
 
 /**
  * HttpClient
@@ -12,23 +12,23 @@ import { fromStream } from '../../utils/fromStream'
 export async function request({
   onProgress,
   url,
-  method = 'GET',
+  method = "GET",
   headers = {},
-  body,
+  body
 }) {
   // streaming uploads aren't possible yet in the browser
   if (body) {
-    body = await collect(body)
+    body = await collect(body);
   }
-  const res = await fetch(url, { method, headers, body })
+  const res = await fetch(url, { method, headers, body });
   const iter =
     res.body && res.body.getReader
       ? fromStream(res.body)
-      : [new Uint8Array(await res.arrayBuffer())]
+      : [new Uint8Array(await res.arrayBuffer())];
   // convert Header object to ordinary JSON
-  headers = {}
+  headers = {};
   for (const [key, value] of res.headers.entries()) {
-    headers[key] = value
+    headers[key] = value;
   }
   return {
     url: res.url,
@@ -36,8 +36,8 @@ export async function request({
     statusCode: res.status,
     statusMessage: res.statusText,
     body: iter,
-    headers: headers,
-  }
+    headers: headers
+  };
 }
 
-export default { request }
+export default { request };

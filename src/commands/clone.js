@@ -1,11 +1,11 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _addRemote } from '../commands/addRemote.js'
-import { _checkout } from '../commands/checkout.js'
-import { _fetch } from '../commands/fetch.js'
-import { _init } from '../commands/init.js'
-import { GitConfigManager } from '../managers/GitConfigManager.js'
+import { _addRemote } from "../commands/addRemote.js";
+import { _checkout } from "../commands/checkout.js";
+import { _fetch } from "../commands/fetch.js";
+import { _init } from "../commands/init.js";
+import { GitConfigManager } from "../managers/GitConfigManager.js";
 
 /**
  * @param {object} args
@@ -57,14 +57,14 @@ export async function _clone({
   singleBranch,
   noCheckout,
   noTags,
-  headers,
+  headers
 }) {
-  await _init({ fs, gitdir })
-  await _addRemote({ fs, gitdir, remote, url, force: false })
+  await _init({ fs, gitdir });
+  await _addRemote({ fs, gitdir, remote, url, force: false });
   if (corsProxy) {
-    const config = await GitConfigManager.get({ fs, gitdir })
-    await config.set(`http.corsProxy`, corsProxy)
-    await GitConfigManager.save({ fs, gitdir, config })
+    const config = await GitConfigManager.get({ fs, gitdir });
+    await config.set(`http.corsProxy`, corsProxy);
+    await GitConfigManager.save({ fs, gitdir, config });
   }
   const { defaultBranch, fetchHead } = await _fetch({
     fs,
@@ -84,11 +84,11 @@ export async function _clone({
     relative,
     singleBranch,
     headers,
-    tags: !noTags,
-  })
-  if (fetchHead === null) return
-  ref = ref || defaultBranch
-  ref = ref.replace('refs/heads/', '')
+    tags: !noTags
+  });
+  if (fetchHead === null) return;
+  ref = ref || defaultBranch;
+  ref = ref.replace("refs/heads/", "");
   // Checkout that branch
   await _checkout({
     fs,
@@ -98,6 +98,6 @@ export async function _clone({
     gitdir,
     ref,
     remote,
-    noCheckout,
-  })
+    noCheckout
+  });
 }

@@ -1,12 +1,12 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _annotatedTag } from '../commands/annotatedTag.js'
-import { MissingNameError } from '../errors/MissingNameError.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
-import { normalizeAuthorObject } from '../utils/normalizeAuthorObject.js'
+import { _annotatedTag } from "../commands/annotatedTag.js";
+import { MissingNameError } from "../errors/MissingNameError.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
+import { normalizeAuthorObject } from "../utils/normalizeAuthorObject.js";
 
 /**
  * Create an annotated tag.
@@ -49,7 +49,7 @@ export async function annotatedTag({
   fs: _fs,
   onSign,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ref,
   tagger: _tagger,
   message = ref,
@@ -57,20 +57,20 @@ export async function annotatedTag({
   object,
   signingKey,
   force = false,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
+    assertParameter("fs", _fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
     if (signingKey) {
-      assertParameter('onSign', onSign)
+      assertParameter("onSign", onSign);
     }
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
 
     // Fill in missing arguments with default values
-    const tagger = await normalizeAuthorObject({ fs, gitdir, author: _tagger })
-    if (!tagger) throw new MissingNameError('tagger')
+    const tagger = await normalizeAuthorObject({ fs, gitdir, author: _tagger });
+    if (!tagger) throw new MissingNameError("tagger");
 
     return await _annotatedTag({
       fs,
@@ -83,10 +83,10 @@ export async function annotatedTag({
       gpgsig,
       object,
       signingKey,
-      force,
-    })
+      force
+    });
   } catch (err) {
-    err.caller = 'git.annotatedTag'
-    throw err
+    err.caller = "git.annotatedTag";
+    throw err;
   }
 }

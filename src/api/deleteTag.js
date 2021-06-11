@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _deleteTag } from '../commands/deleteTag.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _deleteTag } from "../commands/deleteTag.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Delete a local tag ref
@@ -22,17 +22,17 @@ import { join } from '../utils/join.js'
  * console.log('done')
  *
  */
-export async function deleteTag({ fs, dir, gitdir = join(dir, '.git'), ref }) {
+export async function deleteTag({ fs, dir, gitdir = join(dir, ".git"), ref }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('ref', ref)
+    assertParameter("fs", fs);
+    assertParameter("ref", ref);
     return await _deleteTag({
       fs: new FileSystem(fs),
       gitdir,
-      ref,
-    })
+      ref
+    });
   } catch (err) {
-    err.caller = 'git.deleteTag'
-    throw err
+    err.caller = "git.deleteTag";
+    throw err;
   }
 }

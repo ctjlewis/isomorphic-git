@@ -1,14 +1,14 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _commit } from '../commands/commit'
-import { _currentBranch } from '../commands/currentBranch.js'
-import { _findMergeBase } from '../commands/findMergeBase.js'
-import { FastForwardError } from '../errors/FastForwardError.js'
-import { MergeNotSupportedError } from '../errors/MergeNotSupportedError.js'
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { abbreviateRef } from '../utils/abbreviateRef.js'
-import { mergeTree } from '../utils/mergeTree.js'
+import { _commit } from "../commands/commit";
+import { _currentBranch } from "../commands/currentBranch.js";
+import { _findMergeBase } from "../commands/findMergeBase.js";
+import { FastForwardError } from "../errors/FastForwardError.js";
+import { MergeNotSupportedError } from "../errors/MergeNotSupportedError.js";
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { abbreviateRef } from "../utils/abbreviateRef.js";
+import { mergeTree } from "../utils/mergeTree.js";
 
 // import diff3 from 'node-diff3'
 /**
@@ -60,61 +60,61 @@ export async function _merge({
   message,
   author,
   committer,
-  signingKey,
+  signingKey
 }) {
   if (ours === undefined) {
-    ours = await _currentBranch({ fs, gitdir, fullname: true })
+    ours = await _currentBranch({ fs, gitdir, fullname: true });
   }
   ours = await GitRefManager.expand({
     fs,
     gitdir,
-    ref: ours,
-  })
+    ref: ours
+  });
   theirs = await GitRefManager.expand({
     fs,
     gitdir,
-    ref: theirs,
-  })
+    ref: theirs
+  });
   const ourOid = await GitRefManager.resolve({
     fs,
     gitdir,
-    ref: ours,
-  })
+    ref: ours
+  });
   const theirOid = await GitRefManager.resolve({
     fs,
     gitdir,
-    ref: theirs,
-  })
+    ref: theirs
+  });
   // find most recent common ancestor of ref a and ref b
   const baseOids = await _findMergeBase({
     fs,
     cache,
     gitdir,
-    oids: [ourOid, theirOid],
-  })
+    oids: [ourOid, theirOid]
+  });
   if (baseOids.length !== 1) {
-    throw new MergeNotSupportedError()
+    throw new MergeNotSupportedError();
   }
-  const baseOid = baseOids[0]
+  const baseOid = baseOids[0];
   // handle fast-forward case
   if (baseOid === theirOid) {
     return {
       oid: ourOid,
-      alreadyMerged: true,
-    }
+      alreadyMerged: true
+    };
   }
   if (baseOid === ourOid) {
     if (!dryRun && !noUpdateBranch) {
-      await GitRefManager.writeRef({ fs, gitdir, ref: ours, value: theirOid })
+      await GitRefManager.writeRef({ fs, gitdir, ref: ours, value: theirOid });
     }
     return {
       oid: theirOid,
-      fastForward: true,
-    }
+      fastForward: true
+    };
   } else {
     // not a simple fast-forward
     if (fastForwardOnly) {
-      throw new FastForwardError()
+      throw new FastForwardError();
     }
     // try a fancier merge
     const tree = await mergeTree({
@@ -125,14 +125,14 @@ export async function _merge({
       theirOid,
       baseOid,
       ourName: ours,
-      baseName: 'base',
+      baseName: "base",
       theirName: theirs,
-      dryRun,
-    })
+      dryRun
+    });
     if (!message) {
       message = `Merge branch '${abbreviateRef(theirs)}' into ${abbreviateRef(
         ours
-      )}`
+      )}`;
     }
     const oid = await _commit({
       fs,
@@ -146,12 +146,12 @@ export async function _merge({
       committer,
       signingKey,
       dryRun,
-      noUpdateBranch,
-    })
+      noUpdateBranch
+    });
     return {
       oid,
       tree,
-      mergeCommit: true,
-    }
+      mergeCommit: true
+    };
   }
 }

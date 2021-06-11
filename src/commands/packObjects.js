@@ -1,8 +1,8 @@
 // @ts-check
-import { collect } from '../utils/collect.js'
-import { join } from '../utils/join.js'
+import { collect } from "../utils/collect.js";
+import { join } from "../utils/join.js";
 
-import { _pack } from './pack'
+import { _pack } from "./pack";
 
 /**
  *
@@ -23,16 +23,16 @@ import { _pack } from './pack'
  * @see PackObjectsResult
  */
 export async function _packObjects({ fs, cache, gitdir, oids, write }) {
-  const buffers = await _pack({ fs, cache, gitdir, oids })
-  const packfile = Buffer.from(await collect(buffers))
-  const packfileSha = packfile.slice(-20).toString('hex')
-  const filename = `pack-${packfileSha}.pack`
+  const buffers = await _pack({ fs, cache, gitdir, oids });
+  const packfile = Buffer.from(await collect(buffers));
+  const packfileSha = packfile.slice(-20).toString("hex");
+  const filename = `pack-${packfileSha}.pack`;
   if (write) {
-    await fs.write(join(gitdir, `objects/pack/${filename}`), packfile)
-    return { filename }
+    await fs.write(join(gitdir, `objects/pack/${filename}`), packfile);
+    return { filename };
   }
   return {
     filename,
-    packfile: new Uint8Array(packfile),
-  }
+    packfile: new Uint8Array(packfile)
+  };
 }

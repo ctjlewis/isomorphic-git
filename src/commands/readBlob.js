@@ -1,6 +1,6 @@
 // @ts-check
-import { resolveBlob } from '../utils/resolveBlob.js'
-import { resolveFilepath } from '../utils/resolveFilepath.js'
+import { resolveBlob } from "../utils/resolveBlob.js";
+import { resolveFilepath } from "../utils/resolveFilepath.js";
 
 /**
  *
@@ -26,16 +26,16 @@ export async function _readBlob({
   cache,
   gitdir,
   oid,
-  filepath = undefined,
+  filepath = undefined
 }) {
   if (filepath !== undefined) {
-    oid = await resolveFilepath({ fs, cache, gitdir, oid, filepath })
+    oid = await resolveFilepath({ fs, cache, gitdir, oid, filepath });
   }
   const blob = await resolveBlob({
     fs,
     cache,
     gitdir,
-    oid,
-  })
-  return blob
+    oid
+  });
+  return blob;
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _log } from '../commands/log.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _log } from "../commands/log.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Get commit descriptions from the git history
@@ -35,16 +35,16 @@ import { join } from '../utils/join.js'
 export async function log({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
-  ref = 'HEAD',
+  gitdir = join(dir, ".git"),
+  ref = "HEAD",
   depth,
   since, // Date
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
 
     return await _log({
       fs: new FileSystem(fs),
@@ -52,10 +52,10 @@ export async function log({
       gitdir,
       ref,
       depth,
-      since,
-    })
+      since
+    });
   } catch (err) {
-    err.caller = 'git.log'
-    throw err
+    err.caller = "git.log";
+    throw err;
   }
 }

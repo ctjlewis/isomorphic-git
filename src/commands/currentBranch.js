@@ -1,8 +1,8 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { abbreviateRef } from '../utils/abbreviateRef.js'
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { abbreviateRef } from "../utils/abbreviateRef.js";
 
 /**
  * @param {Object} args
@@ -18,22 +18,22 @@ export async function _currentBranch({
   fs,
   gitdir,
   fullname = false,
-  test = false,
+  test = false
 }) {
   const ref = await GitRefManager.resolve({
     fs,
     gitdir,
-    ref: 'HEAD',
-    depth: 2,
-  })
+    ref: "HEAD",
+    depth: 2
+  });
   if (test) {
     try {
-      await GitRefManager.resolve({ fs, gitdir, ref })
+      await GitRefManager.resolve({ fs, gitdir, ref });
     } catch (_) {
-      return
+      return;
     }
   }
   // Return `undefined` for detached HEAD
-  if (!ref.startsWith('refs/')) return
-  return fullname ? ref : abbreviateRef(ref)
+  if (!ref.startsWith("refs/")) return;
+  return fullname ? ref : abbreviateRef(ref);
 }

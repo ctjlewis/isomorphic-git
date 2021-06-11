@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _addRemote } from '../commands/addRemote.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _addRemote } from "../commands/addRemote.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Add or update a remote
@@ -32,25 +32,25 @@ import { join } from '../utils/join.js'
 export async function addRemote({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   remote,
   url,
-  force = false,
+  force = false
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('remote', remote)
-    assertParameter('url', url)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("remote", remote);
+    assertParameter("url", url);
     return await _addRemote({
       fs: new FileSystem(fs),
       gitdir,
       remote,
       url,
-      force,
-    })
+      force
+    });
   } catch (err) {
-    err.caller = 'git.addRemote'
-    throw err
+    err.caller = "git.addRemote";
+    throw err;
   }
 }

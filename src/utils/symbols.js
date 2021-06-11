@@ -3,4 +3,4 @@
 // can be opaque - only having a single property (this symbol) that is not enumerable,
 // and thus the constructor can be passed as an argument to walk while being "unusable"
 // outside of it.
-export const GitWalkSymbol = Symbol('GitWalkSymbol')
+export const GitWalkSymbol = Symbol("GitWalkSymbol");

@@ -1,13 +1,13 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _pull } from '../commands/pull.js'
-import { MissingNameError } from '../errors/MissingNameError.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
-import { normalizeAuthorObject } from '../utils/normalizeAuthorObject.js'
-import { normalizeCommitterObject } from '../utils/normalizeCommitterObject.js'
+import { _pull } from "../commands/pull.js";
+import { MissingNameError } from "../errors/MissingNameError.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
+import { normalizeAuthorObject } from "../utils/normalizeAuthorObject.js";
+import { normalizeCommitterObject } from "../utils/normalizeCommitterObject.js";
 
 /**
  * Fetch and merge commits from a remote repository
@@ -65,7 +65,7 @@ export async function pull({
   onAuthSuccess,
   onAuthFailure,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ref,
   url,
   remote,
@@ -77,24 +77,24 @@ export async function pull({
   author: _author,
   committer: _committer,
   signingKey,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", _fs);
+    assertParameter("gitdir", gitdir);
 
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
 
-    const author = await normalizeAuthorObject({ fs, gitdir, author: _author })
-    if (!author) throw new MissingNameError('author')
+    const author = await normalizeAuthorObject({ fs, gitdir, author: _author });
+    if (!author) throw new MissingNameError("author");
 
     const committer = await normalizeCommitterObject({
       fs,
       gitdir,
       author,
-      committer: _committer,
-    })
-    if (!committer) throw new MissingNameError('committer')
+      committer: _committer
+    });
+    if (!committer) throw new MissingNameError("committer");
 
     return await _pull({
       fs,
@@ -117,10 +117,10 @@ export async function pull({
       headers,
       author,
       committer,
-      signingKey,
-    })
+      signingKey
+    });
   } catch (err) {
-    err.caller = 'git.pull'
-    throw err
+    err.caller = "git.pull";
+    throw err;
   }
 }

@@ -1,5 +1,5 @@
 // @ts-check
-import { pkg } from '../utils/pkg.js'
+import { pkg } from "../utils/pkg.js";
 
 /**
  * Return the version number of isomorphic-git
@@ -15,9 +15,9 @@ import { pkg } from '../utils/pkg.js'
  */
 export function version() {
   try {
-    return pkg.version
+    return pkg.version;
   } catch (err) {
-    err.caller = 'git.version'
-    throw err
+    err.caller = "git.version";
+    throw err;
   }
 }

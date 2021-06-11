@@ -1,9 +1,9 @@
 // @ts-check
-import { _commit } from '../commands/commit.js'
-import { _readTree } from '../commands/readTree.js'
-import { _writeTree } from '../commands/writeTree.js'
-import { NotFoundError } from '../errors/NotFoundError.js'
-import { GitRefManager } from '../managers/GitRefManager.js'
+import { _commit } from "../commands/commit.js";
+import { _readTree } from "../commands/readTree.js";
+import { _writeTree } from "../commands/writeTree.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
+import { GitRefManager } from "../managers/GitRefManager.js";
 
 /**
  * @param {object} args
@@ -34,19 +34,19 @@ export async function _removeNote({
   cache,
   onSign,
   gitdir,
-  ref = 'refs/notes/commits',
+  ref = "refs/notes/commits",
   oid,
   author,
   committer,
-  signingKey,
+  signingKey
 }) {
   // Get the current note commit
-  let parent
+  let parent;
   try {
-    parent = await GitRefManager.resolve({ gitdir, fs, ref })
+    parent = await GitRefManager.resolve({ gitdir, fs, ref });
   } catch (err) {
     if (!(err instanceof NotFoundError)) {
-      throw err
+      throw err;
     }
   }
 
@@ -54,19 +54,19 @@ export async function _removeNote({
   const result = await _readTree({
     fs,
     gitdir,
-    oid: parent || '4b825dc642cb6eb9a060e54bf8d69288fbee4904',
-  })
-  let tree = result.tree
+    oid: parent || "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+  });
+  let tree = result.tree;
 
   // Remove the note blob entry from the tree
-  tree = tree.filter(entry => entry.path !== oid)
+  tree = tree.filter(entry => entry.path !== oid);
 
   // Create the new note tree
   const treeOid = await _writeTree({
     fs,
     gitdir,
-    tree,
-  })
+    tree
+  });
 
   // Create the new note commit
   const commitOid = await _commit({
@@ -80,8 +80,8 @@ export async function _removeNote({
     message: `Note removed by 'isomorphic-git removeNote'\n`,
     author,
     committer,
-    signingKey,
-  })
+    signingKey
+  });
 
-  return commitOid
+  return commitOid;
 }

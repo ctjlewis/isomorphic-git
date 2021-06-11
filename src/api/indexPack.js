@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _indexPack } from '../commands/indexPack.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _indexPack } from "../commands/indexPack.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Create the .idx file for a given .pack file
@@ -39,15 +39,15 @@ export async function indexPack({
   fs,
   onProgress,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   filepath,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('dir', dir)
-    assertParameter('gitdir', dir)
-    assertParameter('filepath', filepath)
+    assertParameter("fs", fs);
+    assertParameter("dir", dir);
+    assertParameter("gitdir", dir);
+    assertParameter("filepath", filepath);
 
     return await _indexPack({
       fs: new FileSystem(fs),
@@ -55,10 +55,10 @@ export async function indexPack({
       onProgress,
       dir,
       gitdir,
-      filepath,
-    })
+      filepath
+    });
   } catch (err) {
-    err.caller = 'git.indexPack'
-    throw err
+    err.caller = "git.indexPack";
+    throw err;
   }
 }

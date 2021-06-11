@@ -31,6 +31,7 @@ Clone a repository
 | relative                         | boolean = false               | Changes the meaning of `depth` to be measured from the current shallow depth rather than from the branch tip.                                   |
 | [headers](./headers)             | Object\<string, string\> = {} | Additional headers to include in HTTP requests, similar to git's `extraHeader` config                                                           |
 | cache                            | object                        | a [cache](cache.md) object                                                                                                                      |
+| plimit                           | number                        | the concurrency limit (# of open files) for this clone                                                                                          |
 | return                           | Promise\<void\>               | Resolves successfully when clone completes                                                                                                      |
 
 Example Code:

@@ -1,10 +1,10 @@
 // @ts-check
 
-import { _checkout } from '../commands/checkout.js'
-import { _currentBranch } from '../commands/currentBranch.js'
-import { _fetch } from '../commands/fetch.js'
-import { _merge } from '../commands/merge.js'
-import { MissingParameterError } from '../errors/MissingParameterError.js'
+import { _checkout } from "../commands/checkout.js";
+import { _currentBranch } from "../commands/currentBranch.js";
+import { _fetch } from "../commands/fetch.js";
+import { _merge } from "../commands/merge.js";
+import { MissingParameterError } from "../errors/MissingParameterError.js";
 
 /**
  * @param {object} args
@@ -62,17 +62,17 @@ export async function _pull({
   headers,
   author,
   committer,
-  signingKey,
+  signingKey
 }) {
   try {
     // If ref is undefined, use 'HEAD'
     if (!ref) {
-      const head = await _currentBranch({ fs, gitdir })
+      const head = await _currentBranch({ fs, gitdir });
       // TODO: use a better error.
       if (!head) {
-        throw new MissingParameterError('ref')
+        throw new MissingParameterError("ref");
       }
-      ref = head
+      ref = head;
     }
 
     const { fetchHead, fetchHeadDescription } = await _fetch({
@@ -91,8 +91,8 @@ export async function _pull({
       remote,
       remoteRef,
       singleBranch,
-      headers,
-    })
+      headers
+    });
     // Merge the remote tracking branch into the local one.
     await _merge({
       fs,
@@ -106,8 +106,8 @@ export async function _pull({
       committer,
       signingKey,
       dryRun: false,
-      noUpdateBranch: false,
-    })
+      noUpdateBranch: false
+    });
     await _checkout({
       fs,
       cache,
@@ -116,10 +116,10 @@ export async function _pull({
       gitdir,
       ref,
       remote,
-      noCheckout: false,
-    })
+      noCheckout: false
+    });
   } catch (err) {
-    err.caller = 'git.pull'
-    throw err
+    err.caller = "git.pull";
+    throw err;
   }
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _listNotes } from '../commands/listNotes.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join'
+import { _listNotes } from "../commands/listNotes.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join";
 
 /**
  * List all the object notes
@@ -22,23 +22,23 @@ import { join } from '../utils/join'
 export async function listNotes({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
-  ref = 'refs/notes/commits',
-  cache = {},
+  gitdir = join(dir, ".git"),
+  ref = "refs/notes/commits",
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
 
     return await _listNotes({
       fs: new FileSystem(fs),
       cache,
       gitdir,
-      ref,
-    })
+      ref
+    });
   } catch (err) {
-    err.caller = 'git.listNotes'
-    throw err
+    err.caller = "git.listNotes";
+    throw err;
   }
 }

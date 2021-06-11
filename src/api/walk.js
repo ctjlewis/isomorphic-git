@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _walk } from '../commands/walk.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _walk } from "../commands/walk.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * @callback WalkerMap
@@ -252,17 +252,17 @@ import { join } from '../utils/join.js'
 export async function walk({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   trees,
   map,
   reduce,
   iterate,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('trees', trees)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("trees", trees);
 
     return await _walk({
       fs: new FileSystem(fs),
@@ -272,10 +272,10 @@ export async function walk({
       trees,
       map,
       reduce,
-      iterate,
-    })
+      iterate
+    });
   } catch (err) {
-    err.caller = 'git.walk'
-    throw err
+    err.caller = "git.walk";
+    throw err;
   }
 }

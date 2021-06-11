@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _getConfig } from '../commands/getConfig.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _getConfig } from "../commands/getConfig.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Read an entry from the git config files.
@@ -31,19 +31,19 @@ import { join } from '../utils/join.js'
  * console.log(value)
  *
  */
-export async function getConfig({ fs, dir, gitdir = join(dir, '.git'), path }) {
+export async function getConfig({ fs, dir, gitdir = join(dir, ".git"), path }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('path', path)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("path", path);
 
     return await _getConfig({
       fs: new FileSystem(fs),
       gitdir,
-      path,
-    })
+      path
+    });
   } catch (err) {
-    err.caller = 'git.getConfig'
-    throw err
+    err.caller = "git.getConfig";
+    throw err;
   }
 }

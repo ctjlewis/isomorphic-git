@@ -1,13 +1,13 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { ObjectTypeError } from '../errors/ObjectTypeError.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { GitAnnotatedTag } from '../models/GitAnnotatedTag.js'
-import { GitCommit } from '../models/GitCommit.js'
-import { GitTree } from '../models/GitTree.js'
-import { _writeObject } from '../storage/writeObject.js'
-import { join } from '../utils/join.js'
+import { ObjectTypeError } from "../errors/ObjectTypeError.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { GitAnnotatedTag } from "../models/GitAnnotatedTag.js";
+import { GitCommit } from "../models/GitCommit.js";
+import { GitTree } from "../models/GitTree.js";
+import { _writeObject } from "../storage/writeObject.js";
+import { join } from "../utils/join.js";
 
 /**
  * Write a git object directly
@@ -77,35 +77,35 @@ import { join } from '../utils/join.js'
 export async function writeObject({
   fs: _fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   type,
   object,
-  format = 'parsed',
+  format = "parsed",
   oid,
-  encoding = undefined,
+  encoding = undefined
 }) {
   try {
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
     // Convert object to buffer
-    if (format === 'parsed') {
+    if (format === "parsed") {
       switch (type) {
-        case 'commit':
-          object = GitCommit.from(object).toObject()
-          break
-        case 'tree':
-          object = GitTree.from(object).toObject()
-          break
-        case 'blob':
-          object = Buffer.from(object, encoding)
-          break
-        case 'tag':
-          object = GitAnnotatedTag.from(object).toObject()
-          break
+        case "commit":
+          object = GitCommit.from(object).toObject();
+          break;
+        case "tree":
+          object = GitTree.from(object).toObject();
+          break;
+        case "blob":
+          object = Buffer.from(object, encoding);
+          break;
+        case "tag":
+          object = GitAnnotatedTag.from(object).toObject();
+          break;
         default:
-          throw new ObjectTypeError(oid || '', type, 'blob|commit|tag|tree')
+          throw new ObjectTypeError(oid || "", type, "blob|commit|tag|tree");
       }
       // GitObjectManager does not know how to serialize content, so we tweak that parameter before passing it.
-      format = 'content'
+      format = "content";
     }
     oid = await _writeObject({
       fs,
@@ -113,11 +113,11 @@ export async function writeObject({
       type,
       object,
       oid,
-      format,
-    })
-    return oid
+      format
+    });
+    return oid;
   } catch (err) {
-    err.caller = 'git.writeObject'
-    throw err
+    err.caller = "git.writeObject";
+    throw err;
   }
 }

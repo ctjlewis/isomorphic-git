@@ -1,9 +1,9 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitRemoteManager } from '../managers/GitRemoteManager.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { formatInfoRefs } from '../utils/formatInfoRefs.js'
+import { GitRemoteManager } from "../managers/GitRemoteManager.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { formatInfoRefs } from "../utils/formatInfoRefs.js";
 
 /**
  * @typedef {Object} GetRemoteInfo2Result - This object has the following schema:
@@ -60,54 +60,54 @@ export async function getRemoteInfo2({
   url,
   headers = {},
   forPush = false,
-  protocolVersion = 2,
+  protocolVersion = 2
 }) {
   try {
-    assertParameter('http', http)
-    assertParameter('url', url)
+    assertParameter("http", http);
+    assertParameter("url", url);
 
-    const GitRemoteHTTP = GitRemoteManager.getRemoteHelperFor({ url })
+    const GitRemoteHTTP = GitRemoteManager.getRemoteHelperFor({ url });
     const remote = await GitRemoteHTTP.discover({
       http,
       onAuth,
       onAuthSuccess,
       onAuthFailure,
       corsProxy,
-      service: forPush ? 'git-receive-pack' : 'git-upload-pack',
+      service: forPush ? "git-receive-pack" : "git-upload-pack",
       url,
       headers,
-      protocolVersion,
-    })
+      protocolVersion
+    });
 
     if (remote.protocolVersion === 2) {
       /** @type GetRemoteInfo2Result */
       return {
         protocolVersion: remote.protocolVersion,
-        capabilities: remote.capabilities2,
-      }
+        capabilities: remote.capabilities2
+      };
     }
 
     // Note: remote.capabilities, remote.refs, and remote.symrefs are Set and Map objects,
     // but one of the objectives of the public API is to always return JSON-compatible objects
     // so we must JSONify them.
     /** @type Object<string, true> */
-    const capabilities = {}
+    const capabilities = {};
     for (const cap of remote.capabilities) {
-      const [key, value] = cap.split('=')
+      const [key, value] = cap.split("=");
       if (value) {
-        capabilities[key] = value
+        capabilities[key] = value;
       } else {
-        capabilities[key] = true
+        capabilities[key] = true;
       }
     }
     /** @type GetRemoteInfo2Result */
     return {
       protocolVersion: 1,
       capabilities,
-      refs: formatInfoRefs(remote, undefined, true, true),
-    }
+      refs: formatInfoRefs(remote, undefined, true, true)
+    };
   } catch (err) {
-    err.caller = 'git.getRemoteInfo2'
-    throw err
+    err.caller = "git.getRemoteInfo2";
+    throw err;
   }
 }

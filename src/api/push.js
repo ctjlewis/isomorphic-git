@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _push } from '../commands/push.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _push } from "../commands/push.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Push a branch or tag
@@ -62,21 +62,21 @@ export async function push({
   onAuthSuccess,
   onAuthFailure,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ref,
   remoteRef,
-  remote = 'origin',
+  remote = "origin",
   url,
   force = false,
   delete: _delete = false,
   corsProxy,
   headers = {},
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('http', http)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", fs);
+    assertParameter("http", http);
+    assertParameter("gitdir", gitdir);
 
     return await _push({
       fs: new FileSystem(fs),
@@ -95,10 +95,10 @@ export async function push({
       force,
       delete: _delete,
       corsProxy,
-      headers,
-    })
+      headers
+    });
   } catch (err) {
-    err.caller = 'git.push'
-    throw err
+    err.caller = "git.push";
+    throw err;
   }
 }

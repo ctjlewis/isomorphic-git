@@ -1,8 +1,8 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitCommit } from '../models/GitCommit.js'
-import { _writeObject as writeObject } from '../storage/writeObject.js'
+import { GitCommit } from "../models/GitCommit.js";
+import { _writeObject as writeObject } from "../storage/writeObject.js";
 
 /**
  * @param {object} args
@@ -16,13 +16,13 @@ import { _writeObject as writeObject } from '../storage/writeObject.js'
  */
 export async function _writeCommit({ fs, gitdir, commit }) {
   // Convert object to buffer
-  const object = GitCommit.from(commit).toObject()
+  const object = GitCommit.from(commit).toObject();
   const oid = await writeObject({
     fs,
     gitdir,
-    type: 'commit',
+    type: "commit",
     object,
-    format: 'content',
-  })
-  return oid
+    format: "content"
+  });
+  return oid;
 }

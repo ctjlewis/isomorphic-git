@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _writeTree } from '../commands/writeTree.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _writeTree } from "../commands/writeTree.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Write a tree object directly
@@ -20,19 +20,19 @@ import { join } from '../utils/join.js'
  * @see TreeEntry
  *
  */
-export async function writeTree({ fs, dir, gitdir = join(dir, '.git'), tree }) {
+export async function writeTree({ fs, dir, gitdir = join(dir, ".git"), tree }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('tree', tree)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("tree", tree);
 
     return await _writeTree({
       fs: new FileSystem(fs),
       gitdir,
-      tree,
-    })
+      tree
+    });
   } catch (err) {
-    err.caller = 'git.writeTree'
-    throw err
+    err.caller = "git.writeTree";
+    throw err;
   }
 }

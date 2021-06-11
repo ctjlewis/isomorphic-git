@@ -1,6 +1,6 @@
-import { normalizeMode } from './normalizeMode'
+import { normalizeMode } from "./normalizeMode";
 
-const MAX_UINT32 = 2 ** 32
+const MAX_UINT32 = 2 ** 32;
 
 function SecondsNanoseconds(
   givenSeconds,
@@ -9,14 +9,14 @@ function SecondsNanoseconds(
   date
 ) {
   if (givenSeconds !== undefined && givenNanoseconds !== undefined) {
-    return [givenSeconds, givenNanoseconds]
+    return [givenSeconds, givenNanoseconds];
   }
   if (milliseconds === undefined) {
-    milliseconds = date.valueOf()
+    milliseconds = date.valueOf();
   }
-  const seconds = Math.floor(milliseconds / 1000)
-  const nanoseconds = (milliseconds - seconds * 1000) * 1000000
-  return [seconds, nanoseconds]
+  const seconds = Math.floor(milliseconds / 1000);
+  const nanoseconds = (milliseconds - seconds * 1000) * 1000000;
+  return [seconds, nanoseconds];
 }
 
 export function normalizeStats(e) {
@@ -25,13 +25,13 @@ export function normalizeStats(e) {
     e.ctimeNanoseconds,
     e.ctimeMs,
     e.ctime
-  )
+  );
   const [mtimeSeconds, mtimeNanoseconds] = SecondsNanoseconds(
     e.mtimeSeconds,
     e.mtimeNanoseconds,
     e.mtimeMs,
     e.mtime
-  )
+  );
 
   return {
     ctimeSeconds: ctimeSeconds % MAX_UINT32,
@@ -45,6 +45,6 @@ export function normalizeStats(e) {
     gid: e.gid % MAX_UINT32,
     // size of -1 happens over a BrowserFS HTTP Backend that doesn't serve Content-Length headers
     // (like the Karma webserver) because BrowserFS HTTP Backend uses HTTP HEAD requests to do fs.stat
-    size: e.size > -1 ? e.size % MAX_UINT32 : 0,
-  }
+    size: e.size > -1 ? e.size % MAX_UINT32 : 0
+  };
 }

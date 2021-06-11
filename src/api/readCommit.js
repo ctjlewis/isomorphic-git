@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _readCommit } from '../commands/readCommit.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _readCommit } from "../commands/readCommit.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Read a commit object directly
@@ -31,23 +31,23 @@ import { join } from '../utils/join.js'
 export async function readCommit({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   oid,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('oid', oid)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("oid", oid);
 
     return await _readCommit({
       fs: new FileSystem(fs),
       cache,
       gitdir,
-      oid,
-    })
+      oid
+    });
   } catch (err) {
-    err.caller = 'git.readCommit'
-    throw err
+    err.caller = "git.readCommit";
+    throw err;
   }
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _clone } from '../commands/clone.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _clone } from "../commands/clone.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Clone a repository
@@ -59,11 +59,11 @@ export async function clone({
   onAuthSuccess,
   onAuthFailure,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   url,
   corsProxy = undefined,
   ref = undefined,
-  remote = 'origin',
+  remote = "origin",
   depth = undefined,
   since = undefined,
   exclude = [],
@@ -72,16 +72,16 @@ export async function clone({
   noCheckout = false,
   noTags = false,
   headers = {},
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('http', http)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", fs);
+    assertParameter("http", http);
+    assertParameter("gitdir", gitdir);
     if (!noCheckout) {
-      assertParameter('dir', dir)
+      assertParameter("dir", dir);
     }
-    assertParameter('url', url)
+    assertParameter("url", url);
 
     return await _clone({
       fs: new FileSystem(fs, plimit),
@@ -105,10 +105,10 @@ export async function clone({
       singleBranch,
       noCheckout,
       noTags,
-      headers,
-    })
+      headers
+    });
   } catch (err) {
-    err.caller = 'git.clone'
-    throw err
+    err.caller = "git.clone";
+    throw err;
   }
 }

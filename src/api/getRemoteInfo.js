@@ -1,8 +1,8 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitRemoteManager } from '../managers/GitRemoteManager.js'
-import { assertParameter } from '../utils/assertParameter.js'
+import { GitRemoteManager } from "../managers/GitRemoteManager.js";
+import { assertParameter } from "../utils/assertParameter.js";
 
 /**
  *
@@ -51,57 +51,57 @@ export async function getRemoteInfo({
   corsProxy,
   url,
   headers = {},
-  forPush = false,
+  forPush = false
 }) {
   try {
-    assertParameter('http', http)
-    assertParameter('url', url)
+    assertParameter("http", http);
+    assertParameter("url", url);
 
-    const GitRemoteHTTP = GitRemoteManager.getRemoteHelperFor({ url })
+    const GitRemoteHTTP = GitRemoteManager.getRemoteHelperFor({ url });
     const remote = await GitRemoteHTTP.discover({
       http,
       onAuth,
       onAuthSuccess,
       onAuthFailure,
       corsProxy,
-      service: forPush ? 'git-receive-pack' : 'git-upload-pack',
+      service: forPush ? "git-receive-pack" : "git-upload-pack",
       url,
       headers,
-      protocolVersion: 1,
-    })
+      protocolVersion: 1
+    });
 
     // Note: remote.capabilities, remote.refs, and remote.symrefs are Set and Map objects,
     // but one of the objectives of the public API is to always return JSON-compatible objects
     // so we must JSONify them.
     const result = {
-      capabilities: [...remote.capabilities],
-    }
+      capabilities: [...remote.capabilities]
+    };
     // Convert the flat list into an object tree, because I figure 99% of the time
     // that will be easier to use.
     for (const [ref, oid] of remote.refs) {
-      const parts = ref.split('/')
-      const last = parts.pop()
-      let o = result
+      const parts = ref.split("/");
+      const last = parts.pop();
+      let o = result;
       for (const part of parts) {
-        o[part] = o[part] || {}
-        o = o[part]
+        o[part] = o[part] || {};
+        o = o[part];
       }
-      o[last] = oid
+      o[last] = oid;
     }
     // Merge symrefs on top of refs to more closely match actual git repo layouts
     for (const [symref, ref] of remote.symrefs) {
-      const parts = symref.split('/')
-      const last = parts.pop()
-      let o = result
+      const parts = symref.split("/");
+      const last = parts.pop();
+      let o = result;
       for (const part of parts) {
-        o[part] = o[part] || {}
-        o = o[part]
+        o[part] = o[part] || {};
+        o = o[part];
       }
-      o[last] = ref
+      o[last] = ref;
     }
-    return result
+    return result;
   } catch (err) {
-    err.caller = 'git.getRemoteInfo'
-    throw err
+    err.caller = "git.getRemoteInfo";
+    throw err;
   }
 }

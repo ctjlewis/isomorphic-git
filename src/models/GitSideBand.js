@@ -19,63 +19,63 @@ information.
 If no 'side-band' capability was specified, the server will stream the
 entire packfile without multiplexing.
 */
-import { FIFO } from '../utils/FIFO.js'
+import { FIFO } from "../utils/FIFO.js";
 
-import { GitPktLine } from './GitPktLine.js'
+import { GitPktLine } from "./GitPktLine.js";
 
 export class GitSideBand {
   static demux(input) {
-    const read = GitPktLine.streamReader(input)
+    const read = GitPktLine.streamReader(input);
     // And now for the ridiculous side-band or side-band-64k protocol
-    const packetlines = new FIFO()
-    const packfile = new FIFO()
-    const progress = new FIFO()
+    const packetlines = new FIFO();
+    const packfile = new FIFO();
+    const progress = new FIFO();
     // TODO: Use a proper through stream?
     const nextBit = async function() {
-      const line = await read()
+      const line = await read();
       // Skip over flush packets
-      if (line === null) return nextBit()
+      if (line === null) return nextBit();
       // A made up convention to signal there's no more to read.
       if (line === true) {
-        packetlines.end()
-        progress.end()
-        packfile.end()
-        return
+        packetlines.end();
+        progress.end();
+        packfile.end();
+        return;
       }
       // Examine first byte to determine which output "stream" to use
       switch (line[0]) {
         case 1: {
           // pack data
-          packfile.write(line.slice(1))
-          break
+          packfile.write(line.slice(1));
+          break;
         }
         case 2: {
           // progress message
-          progress.write(line.slice(1))
-          break
+          progress.write(line.slice(1));
+          break;
         }
         case 3: {
           // fatal error message just before stream aborts
-          const error = line.slice(1)
-          progress.write(error)
-          packfile.destroy(new Error(error.toString('utf8')))
-          return
+          const error = line.slice(1);
+          progress.write(error);
+          packfile.destroy(new Error(error.toString("utf8")));
+          return;
         }
         default: {
           // Not part of the side-band-64k protocol
-          packetlines.write(line.slice(0))
+          packetlines.write(line.slice(0));
         }
       }
       // Careful not to blow up the stack.
       // I think Promises in a tail-call position should be OK.
-      nextBit()
-    }
-    nextBit()
+      nextBit();
+    };
+    nextBit();
     return {
       packetlines,
       packfile,
-      progress,
-    }
+      progress
+    };
   }
   // static mux ({
   //   protocol, // 'side-band' or 'side-band-64k'

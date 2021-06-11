@@ -1,17 +1,17 @@
 // @ts-check
-import { _readTree } from '../commands/readTree.js'
-import { NotFoundError } from '../errors/NotFoundError.js'
-import { ObjectTypeError } from '../errors/ObjectTypeError'
-import { GitIgnoreManager } from '../managers/GitIgnoreManager.js'
-import { GitIndexManager } from '../managers/GitIndexManager.js'
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { GitTree } from '../models/GitTree.js'
-import { _readObject } from '../storage/readObject.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { compareStats } from '../utils/compareStats.js'
-import { hashObject } from '../utils/hashObject.js'
-import { join } from '../utils/join.js'
+import { _readTree } from "../commands/readTree.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
+import { ObjectTypeError } from "../errors/ObjectTypeError";
+import { GitIgnoreManager } from "../managers/GitIgnoreManager.js";
+import { GitIndexManager } from "../managers/GitIndexManager.js";
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { GitTree } from "../models/GitTree.js";
+import { _readObject } from "../storage/readObject.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { compareStats } from "../utils/compareStats.js";
+import { hashObject } from "../utils/hashObject.js";
+import { join } from "../utils/join.js";
 
 /**
  * Tell whether a file has been changed
@@ -51,58 +51,58 @@ import { join } from '../utils/join.js'
 export async function status({
   fs: _fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   filepath,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('filepath', filepath)
+    assertParameter("fs", _fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("filepath", filepath);
 
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
     const ignored = await GitIgnoreManager.isIgnored({
       fs,
       gitdir,
       dir,
-      filepath,
-    })
+      filepath
+    });
     if (ignored) {
-      return 'ignored'
+      return "ignored";
     }
-    const headTree = await getHeadTree({ fs, cache, gitdir })
+    const headTree = await getHeadTree({ fs, cache, gitdir });
     const treeOid = await getOidAtPath({
       fs,
       cache,
       gitdir,
       tree: headTree,
-      path: filepath,
-    })
+      path: filepath
+    });
     const indexEntry = await GitIndexManager.acquire(
       { fs, gitdir, cache },
       async function(index) {
         for (const entry of index) {
-          if (entry.path === filepath) return entry
+          if (entry.path === filepath) return entry;
         }
-        return null
+        return null;
       }
-    )
-    const stats = await fs.lstat(join(dir, filepath))
+    );
+    const stats = await fs.lstat(join(dir, filepath));
 
-    const H = treeOid !== null // head
-    const I = indexEntry !== null // index
-    const W = stats !== null // working dir
+    const H = treeOid !== null; // head
+    const I = indexEntry !== null; // index
+    const W = stats !== null; // working dir
 
     const getWorkdirOid = async () => {
       if (I && !compareStats(indexEntry, stats)) {
-        return indexEntry.oid
+        return indexEntry.oid;
       } else {
-        const object = await fs.read(join(dir, filepath))
+        const object = await fs.read(join(dir, filepath));
         const workdirOid = await hashObject({
           gitdir,
-          type: 'blob',
-          object,
-        })
+          type: "blob",
+          object
+        });
         // If the oid in the index === working dir oid but stats differed update cache
         if (I && indexEntry.oid === workdirOid) {
           // and as long as our fs.stats aren't bad.
@@ -113,39 +113,39 @@ export async function status({
             GitIndexManager.acquire({ fs, gitdir, cache }, async function(
               index
             ) {
-              index.insert({ filepath, stats, oid: workdirOid })
-            })
+              index.insert({ filepath, stats, oid: workdirOid });
+            });
           }
         }
-        return workdirOid
+        return workdirOid;
       }
-    }
+    };
 
-    if (!H && !W && !I) return 'absent' // ---
-    if (!H && !W && I) return '*absent' // -A-
-    if (!H && W && !I) return '*added' // --A
+    if (!H && !W && !I) return "absent"; // ---
+    if (!H && !W && I) return "*absent"; // -A-
+    if (!H && W && !I) return "*added"; // --A
     if (!H && W && I) {
-      const workdirOid = await getWorkdirOid()
+      const workdirOid = await getWorkdirOid();
       // @ts-ignore
-      return workdirOid === indexEntry.oid ? 'added' : '*added' // -AA : -AB
+      return workdirOid === indexEntry.oid ? "added" : "*added"; // -AA : -AB
     }
-    if (H && !W && !I) return 'deleted' // A--
+    if (H && !W && !I) return "deleted"; // A--
     if (H && !W && I) {
       // @ts-ignore
-      return treeOid === indexEntry.oid ? '*deleted' : '*deleted' // AA- : AB-
+      return treeOid === indexEntry.oid ? "*deleted" : "*deleted"; // AA- : AB-
     }
     if (H && W && !I) {
-      const workdirOid = await getWorkdirOid()
-      return workdirOid === treeOid ? '*undeleted' : '*undeletemodified' // A-A : A-B
+      const workdirOid = await getWorkdirOid();
+      return workdirOid === treeOid ? "*undeleted" : "*undeletemodified"; // A-A : A-B
     }
     if (H && W && I) {
-      const workdirOid = await getWorkdirOid()
+      const workdirOid = await getWorkdirOid();
       if (workdirOid === treeOid) {
         // @ts-ignore
-        return workdirOid === indexEntry.oid ? 'unmodified' : '*unmodified' // AAA : ABA
+        return workdirOid === indexEntry.oid ? "unmodified" : "*unmodified"; // AAA : ABA
       } else {
         // @ts-ignore
-        return workdirOid === indexEntry.oid ? 'modified' : '*modified' // ABB : AAB
+        return workdirOid === indexEntry.oid ? "modified" : "*modified"; // ABB : AAB
       }
     }
     /*
@@ -165,48 +165,48 @@ export async function status({
     AAB
     */
   } catch (err) {
-    err.caller = 'git.status'
-    throw err
+    err.caller = "git.status";
+    throw err;
   }
 }
 
 async function getOidAtPath({ fs, cache, gitdir, tree, path }) {
-  if (typeof path === 'string') path = path.split('/')
-  const dirname = path.shift()
+  if (typeof path === "string") path = path.split("/");
+  const dirname = path.shift();
   for (const entry of tree) {
     if (entry.path === dirname) {
       if (path.length === 0) {
-        return entry.oid
+        return entry.oid;
       }
       const { type, object } = await _readObject({
         fs,
         cache,
         gitdir,
-        oid: entry.oid,
-      })
-      if (type === 'tree') {
-        const tree = GitTree.from(object)
-        return getOidAtPath({ fs, cache, gitdir, tree, path })
+        oid: entry.oid
+      });
+      if (type === "tree") {
+        const tree = GitTree.from(object);
+        return getOidAtPath({ fs, cache, gitdir, tree, path });
       }
-      if (type === 'blob') {
-        throw new ObjectTypeError(entry.oid, type, 'blob', path.join('/'))
+      if (type === "blob") {
+        throw new ObjectTypeError(entry.oid, type, "blob", path.join("/"));
       }
     }
   }
-  return null
+  return null;
 }
 
 async function getHeadTree({ fs, cache, gitdir }) {
   // Get the tree from the HEAD commit.
-  let oid
+  let oid;
   try {
-    oid = await GitRefManager.resolve({ fs, gitdir, ref: 'HEAD' })
+    oid = await GitRefManager.resolve({ fs, gitdir, ref: "HEAD" });
   } catch (e) {
     // Handle fresh branches with no commits
     if (e instanceof NotFoundError) {
-      return []
+      return [];
     }
   }
-  const { tree } = await _readTree({ fs, cache, gitdir, oid })
-  return tree
+  const { tree } = await _readTree({ fs, cache, gitdir, oid });
+  return tree;
 }

@@ -1,7 +1,7 @@
 // @ts-check
-import { GitPackIndex } from '../models/GitPackIndex.js'
-import { _readObject as readObject } from '../storage/readObject.js'
-import { join } from '../utils/join.js'
+import { GitPackIndex } from "../models/GitPackIndex.js";
+import { _readObject as readObject } from "../storage/readObject.js";
+import { join } from "../utils/join.js";
 
 /**
  * @param {object} args
@@ -20,23 +20,23 @@ export async function _indexPack({
   onProgress,
   dir,
   gitdir,
-  filepath,
+  filepath
 }) {
   try {
-    filepath = join(dir, filepath)
-    const pack = await fs.read(filepath)
-    const getExternalRefDelta = oid => readObject({ fs, cache, gitdir, oid })
+    filepath = join(dir, filepath);
+    const pack = await fs.read(filepath);
+    const getExternalRefDelta = oid => readObject({ fs, cache, gitdir, oid });
     const idx = await GitPackIndex.fromPack({
       pack,
       getExternalRefDelta,
-      onProgress,
-    })
-    await fs.write(filepath.replace(/\.pack$/, '.idx'), await idx.toBuffer())
+      onProgress
+    });
+    await fs.write(filepath.replace(/\.pack$/, ".idx"), await idx.toBuffer());
     return {
-      oids: [...idx.hashes],
-    }
+      oids: [...idx.hashes]
+    };
   } catch (err) {
-    err.caller = 'git.indexPack'
-    throw err
+    err.caller = "git.indexPack";
+    throw err;
   }
 }

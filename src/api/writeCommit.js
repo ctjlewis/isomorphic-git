@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _writeCommit } from '../commands/writeCommit.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _writeCommit } from "../commands/writeCommit.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Write a commit object directly
@@ -22,21 +22,21 @@ import { join } from '../utils/join.js'
 export async function writeCommit({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
-  commit,
+  gitdir = join(dir, ".git"),
+  commit
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('commit', commit)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("commit", commit);
 
     return await _writeCommit({
       fs: new FileSystem(fs),
       gitdir,
-      commit,
-    })
+      commit
+    });
   } catch (err) {
-    err.caller = 'git.writeCommit'
-    throw err
+    err.caller = "git.writeCommit";
+    throw err;
   }
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _checkout } from '../commands/checkout.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _checkout } from "../commands/checkout.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Checkout a branch
@@ -62,22 +62,22 @@ export async function checkout({
   fs,
   onProgress,
   dir,
-  gitdir = join(dir, '.git'),
-  remote = 'origin',
+  gitdir = join(dir, ".git"),
+  remote = "origin",
   ref: _ref,
   filepaths,
   noCheckout = false,
   noUpdateHead = _ref === undefined,
   dryRun = false,
   force = false,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('dir', dir)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", fs);
+    assertParameter("dir", dir);
+    assertParameter("gitdir", gitdir);
 
-    const ref = _ref || 'HEAD'
+    const ref = _ref || "HEAD";
     return await _checkout({
       fs: new FileSystem(fs),
       cache,
@@ -90,10 +90,10 @@ export async function checkout({
       noCheckout,
       noUpdateHead,
       dryRun,
-      force,
-    })
+      force
+    });
   } catch (err) {
-    err.caller = 'git.checkout'
-    throw err
+    err.caller = "git.checkout";
+    throw err;
   }
 }

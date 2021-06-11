@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _fetch } from '../commands/fetch.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _fetch } from "../commands/fetch.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  *
@@ -73,7 +73,7 @@ export async function fetch({
   onAuthSuccess,
   onAuthFailure,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ref,
   remote,
   remoteRef,
@@ -88,12 +88,12 @@ export async function fetch({
   headers = {},
   prune = false,
   pruneTags = false,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('http', http)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", fs);
+    assertParameter("http", http);
+    assertParameter("gitdir", gitdir);
 
     return await _fetch({
       fs: new FileSystem(fs),
@@ -118,10 +118,10 @@ export async function fetch({
       singleBranch,
       headers,
       prune,
-      pruneTags,
-    })
+      pruneTags
+    });
   } catch (err) {
-    err.caller = 'git.fetch'
-    throw err
+    err.caller = "git.fetch";
+    throw err;
   }
 }

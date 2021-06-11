@@ -1,9 +1,9 @@
-import get from 'simple-get'
+import get from "simple-get";
 
-import '../../typedefs-http.js'
-import { asyncIteratorToStream } from '../../utils/asyncIteratorToStream.js'
-import { collect } from '../../utils/collect.js'
-import { fromNodeStream } from '../../utils/fromNodeStream.js'
+import "../../typedefs-http.js";
+import { asyncIteratorToStream } from "../../utils/asyncIteratorToStream.js";
+import { collect } from "../../utils/collect.js";
+import { fromNodeStream } from "../../utils/fromNodeStream.js";
 
 /**
  * HttpClient
@@ -14,15 +14,15 @@ import { fromNodeStream } from '../../utils/fromNodeStream.js'
 export async function request({
   onProgress,
   url,
-  method = 'GET',
+  method = "GET",
   headers = {},
-  body,
+  body
 }) {
   // If we can, we should send it as a single buffer so it sets a Content-Length header.
   if (body && Array.isArray(body)) {
-    body = Buffer.from(await collect(body))
+    body = Buffer.from(await collect(body));
   } else if (body) {
-    body = asyncIteratorToStream(body)
+    body = asyncIteratorToStream(body);
   }
   return new Promise((resolve, reject) => {
     get(
@@ -30,22 +30,22 @@ export async function request({
         url,
         method,
         headers,
-        body,
+        body
       },
       (err, res) => {
-        if (err) return reject(err)
-        const iter = fromNodeStream(res)
+        if (err) return reject(err);
+        const iter = fromNodeStream(res);
         resolve({
           url: res.url,
           method: res.method,
           statusCode: res.statusCode,
           statusMessage: res.statusMessage,
           body: iter,
-          headers: res.headers,
-        })
+          headers: res.headers
+        });
       }
-    )
-  })
+    );
+  });
 }
 
-export default { request }
+export default { request };

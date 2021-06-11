@@ -1,7 +1,7 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitConfigManager } from '../managers/GitConfigManager.js'
+import { GitConfigManager } from "../managers/GitConfigManager.js";
 
 /**
  * @param {Object} args
@@ -13,6 +13,6 @@ import { GitConfigManager } from '../managers/GitConfigManager.js'
  *
  */
 export async function _getConfigAll({ fs, gitdir, path }) {
-  const config = await GitConfigManager.get({ fs, gitdir })
-  return config.getall(path)
+  const config = await GitConfigManager.get({ fs, gitdir });
+  return config.getall(path);
 }

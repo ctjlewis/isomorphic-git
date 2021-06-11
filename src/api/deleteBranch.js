@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _deleteBranch } from '../commands/deleteBranch.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _deleteBranch } from "../commands/deleteBranch.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Delete a local branch
@@ -27,19 +27,19 @@ import { join } from '../utils/join.js'
 export async function deleteBranch({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
-  ref,
+  gitdir = join(dir, ".git"),
+  ref
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('ref', ref)
+    assertParameter("fs", fs);
+    assertParameter("ref", ref);
     return await _deleteBranch({
       fs: new FileSystem(fs),
       gitdir,
-      ref,
-    })
+      ref
+    });
   } catch (err) {
-    err.caller = 'git.deleteBranch'
-    throw err
+    err.caller = "git.deleteBranch";
+    throw err;
   }
 }

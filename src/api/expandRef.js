@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Expand an abbreviated ref to its full name
@@ -22,18 +22,18 @@ import { join } from '../utils/join.js'
  * console.log(fullRef)
  *
  */
-export async function expandRef({ fs, dir, gitdir = join(dir, '.git'), ref }) {
+export async function expandRef({ fs, dir, gitdir = join(dir, ".git"), ref }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
     return await GitRefManager.expand({
       fs: new FileSystem(fs),
       gitdir,
-      ref,
-    })
+      ref
+    });
   } catch (err) {
-    err.caller = 'git.expandRef'
-    throw err
+    err.caller = "git.expandRef";
+    throw err;
   }
 }

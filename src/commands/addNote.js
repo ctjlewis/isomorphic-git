@@ -1,13 +1,13 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _commit } from '../commands/commit.js'
-import { _readTree } from '../commands/readTree.js'
-import { _writeTree } from '../commands/writeTree.js'
-import { AlreadyExistsError } from '../errors/AlreadyExistsError.js'
-import { NotFoundError } from '../errors/NotFoundError.js'
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { _writeObject as writeObject } from '../storage/writeObject.js'
+import { _commit } from "../commands/commit.js";
+import { _readTree } from "../commands/readTree.js";
+import { _writeTree } from "../commands/writeTree.js";
+import { AlreadyExistsError } from "../errors/AlreadyExistsError.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { _writeObject as writeObject } from "../storage/writeObject.js";
 
 /**
  * @param {object} args
@@ -45,15 +45,15 @@ export async function _addNote({
   force,
   author,
   committer,
-  signingKey,
+  signingKey
 }) {
   // Get the current note commit
-  let parent
+  let parent;
   try {
-    parent = await GitRefManager.resolve({ gitdir, fs, ref })
+    parent = await GitRefManager.resolve({ gitdir, fs, ref });
   } catch (err) {
     if (!(err instanceof NotFoundError)) {
-      throw err
+      throw err;
     }
   }
 
@@ -62,40 +62,40 @@ export async function _addNote({
     fs,
     cache,
     gitdir,
-    oid: parent || '4b825dc642cb6eb9a060e54bf8d69288fbee4904',
-  })
-  let tree = result.tree
+    oid: parent || "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+  });
+  let tree = result.tree;
 
   // Handle the case where a note already exists
   if (force) {
-    tree = tree.filter(entry => entry.path !== oid)
+    tree = tree.filter(entry => entry.path !== oid);
   } else {
     for (const entry of tree) {
       if (entry.path === oid) {
-        throw new AlreadyExistsError('note', oid)
+        throw new AlreadyExistsError("note", oid);
       }
     }
   }
 
   // Create the note blob
-  if (typeof note === 'string') {
-    note = Buffer.from(note, 'utf8')
+  if (typeof note === "string") {
+    note = Buffer.from(note, "utf8");
   }
   const noteOid = await writeObject({
     fs,
     gitdir,
-    type: 'blob',
+    type: "blob",
     object: note,
-    format: 'content',
-  })
+    format: "content"
+  });
 
   // Create the new note tree
-  tree.push({ mode: '100644', path: oid, oid: noteOid, type: 'blob' })
+  tree.push({ mode: "100644", path: oid, oid: noteOid, type: "blob" });
   const treeOid = await _writeTree({
     fs,
     gitdir,
-    tree,
-  })
+    tree
+  });
 
   // Create the new note commit
   const commitOid = await _commit({
@@ -109,8 +109,8 @@ export async function _addNote({
     message: `Note added by 'isomorphic-git addNote'\n`,
     author,
     committer,
-    signingKey,
-  })
+    signingKey
+  });
 
-  return commitOid
+  return commitOid;
 }

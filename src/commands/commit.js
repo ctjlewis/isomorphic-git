@@ -1,12 +1,12 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitIndexManager } from '../managers/GitIndexManager.js'
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { GitCommit } from '../models/GitCommit.js'
-import { GitTree } from '../models/GitTree.js'
-import { _writeObject as writeObject } from '../storage/writeObject.js'
-import { flatFileListToDirectoryStructure } from '../utils/flatFileListToDirectoryStructure.js'
+import { GitIndexManager } from "../managers/GitIndexManager.js";
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { GitCommit } from "../models/GitCommit.js";
+import { GitTree } from "../models/GitTree.js";
+import { _writeObject as writeObject } from "../storage/writeObject.js";
+import { flatFileListToDirectoryStructure } from "../utils/flatFileListToDirectoryStructure.js";
 
 /**
  *
@@ -48,22 +48,22 @@ export async function _commit({
   noUpdateBranch = false,
   ref,
   parent,
-  tree,
+  tree
 }) {
   if (!ref) {
     ref = await GitRefManager.resolve({
       fs,
       gitdir,
-      ref: 'HEAD',
-      depth: 2,
-    })
+      ref: "HEAD",
+      depth: 2
+    });
   }
 
   return GitIndexManager.acquire({ fs, gitdir, cache }, async function(index) {
-    const inodes = flatFileListToDirectoryStructure(index.entries)
-    const inode = inodes.get('.')
+    const inodes = flatFileListToDirectoryStructure(index.entries);
+    const inode = inodes.get(".");
     if (!tree) {
-      tree = await constructTree({ fs, gitdir, inode, dryRun })
+      tree = await constructTree({ fs, gitdir, inode, dryRun });
     }
     if (!parent) {
       try {
@@ -71,12 +71,12 @@ export async function _commit({
           await GitRefManager.resolve({
             fs,
             gitdir,
-            ref,
-          }),
-        ]
+            ref
+          })
+        ];
       } catch (err) {
         // Probably an initial commit
-        parent = []
+        parent = [];
       }
     }
     let comm = GitCommit.from({
@@ -84,53 +84,53 @@ export async function _commit({
       parent,
       author,
       committer,
-      message,
-    })
+      message
+    });
     if (signingKey) {
-      comm = await GitCommit.sign(comm, onSign, signingKey)
+      comm = await GitCommit.sign(comm, onSign, signingKey);
     }
     const oid = await writeObject({
       fs,
       gitdir,
-      type: 'commit',
+      type: "commit",
       object: comm.toObject(),
-      dryRun,
-    })
+      dryRun
+    });
     if (!noUpdateBranch && !dryRun) {
       // Update branch pointer
       await GitRefManager.writeRef({
         fs,
         gitdir,
         ref,
-        value: oid,
-      })
+        value: oid
+      });
     }
-    return oid
-  })
+    return oid;
+  });
 }
 
 async function constructTree({ fs, gitdir, inode, dryRun }) {
   // use depth first traversal
-  const children = inode.children
+  const children = inode.children;
   for (const inode of children) {
-    if (inode.type === 'tree') {
-      inode.metadata.mode = '040000'
-      inode.metadata.oid = await constructTree({ fs, gitdir, inode, dryRun })
+    if (inode.type === "tree") {
+      inode.metadata.mode = "040000";
+      inode.metadata.oid = await constructTree({ fs, gitdir, inode, dryRun });
     }
   }
   const entries = children.map(inode => ({
     mode: inode.metadata.mode,
     path: inode.basename,
     oid: inode.metadata.oid,
-    type: inode.type,
-  }))
-  const tree = GitTree.from(entries)
+    type: inode.type
+  }));
+  const tree = GitTree.from(entries);
   const oid = await writeObject({
     fs,
     gitdir,
-    type: 'tree',
+    type: "tree",
     object: tree.toObject(),
-    dryRun,
-  })
-  return oid
+    dryRun
+  });
+  return oid;
 }

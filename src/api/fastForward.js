@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _pull } from '../commands/pull.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _pull } from "../commands/pull.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Like `pull`, but hard-coded with `fastForward: true` so there is no need for an `author` parameter.
@@ -50,7 +50,7 @@ export async function fastForward({
   onAuthSuccess,
   onAuthFailure,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ref,
   url,
   remote,
@@ -58,19 +58,19 @@ export async function fastForward({
   corsProxy,
   singleBranch,
   headers = {},
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('http', http)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", fs);
+    assertParameter("http", http);
+    assertParameter("gitdir", gitdir);
 
     const thisWillNotBeUsed = {
-      name: '',
-      email: '',
+      name: "",
+      email: "",
       timestamp: Date.now(),
-      timezoneOffset: 0,
-    }
+      timezoneOffset: 0
+    };
 
     return await _pull({
       fs: new FileSystem(fs),
@@ -92,10 +92,10 @@ export async function fastForward({
       singleBranch,
       headers,
       author: thisWillNotBeUsed,
-      committer: thisWillNotBeUsed,
-    })
+      committer: thisWillNotBeUsed
+    });
   } catch (err) {
-    err.caller = 'git.fastForward'
-    throw err
+    err.caller = "git.fastForward";
+    throw err;
   }
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _currentBranch } from '../commands/currentBranch.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _currentBranch } from "../commands/currentBranch.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Get the name of the branch currently pointed to by .git/HEAD
@@ -31,21 +31,21 @@ import { join } from '../utils/join.js'
 export async function currentBranch({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   fullname = false,
-  test = false,
+  test = false
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
     return await _currentBranch({
       fs: new FileSystem(fs),
       gitdir,
       fullname,
-      test,
-    })
+      test
+    });
   } catch (err) {
-    err.caller = 'git.currentBranch'
-    throw err
+    err.caller = "git.currentBranch";
+    throw err;
   }
 }

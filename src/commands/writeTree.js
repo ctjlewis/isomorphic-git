@@ -1,8 +1,8 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitTree } from '../models/GitTree.js'
-import { _writeObject as writeObject } from '../storage/writeObject.js'
+import { GitTree } from "../models/GitTree.js";
+import { _writeObject as writeObject } from "../storage/writeObject.js";
 
 /**
  * @param {object} args
@@ -14,13 +14,13 @@ import { _writeObject as writeObject } from '../storage/writeObject.js'
  */
 export async function _writeTree({ fs, gitdir, tree }) {
   // Convert object to buffer
-  const object = GitTree.from(tree).toObject()
+  const object = GitTree.from(tree).toObject();
   const oid = await writeObject({
     fs,
     gitdir,
-    type: 'tree',
+    type: "tree",
     object,
-    format: 'content',
-  })
-  return oid
+    format: "content"
+  });
+  return oid;
 }

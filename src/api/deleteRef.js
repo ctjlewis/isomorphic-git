@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Delete a local ref
@@ -22,13 +22,13 @@ import { join } from '../utils/join.js'
  * console.log('done')
  *
  */
-export async function deleteRef({ fs, dir, gitdir = join(dir, '.git'), ref }) {
+export async function deleteRef({ fs, dir, gitdir = join(dir, ".git"), ref }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('ref', ref)
-    await GitRefManager.deleteRef({ fs: new FileSystem(fs), gitdir, ref })
+    assertParameter("fs", fs);
+    assertParameter("ref", ref);
+    await GitRefManager.deleteRef({ fs: new FileSystem(fs), gitdir, ref });
   } catch (err) {
-    err.caller = 'git.deleteRef'
-    throw err
+    err.caller = "git.deleteRef";
+    throw err;
   }
 }

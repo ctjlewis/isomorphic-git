@@ -1,13 +1,13 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _merge } from '../commands/merge.js'
-import { MissingNameError } from '../errors/MissingNameError.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
-import { normalizeAuthorObject } from '../utils/normalizeAuthorObject.js'
-import { normalizeCommitterObject } from '../utils/normalizeCommitterObject.js'
+import { _merge } from "../commands/merge.js";
+import { MissingNameError } from "../errors/MissingNameError.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
+import { normalizeAuthorObject } from "../utils/normalizeAuthorObject.js";
+import { normalizeCommitterObject } from "../utils/normalizeCommitterObject.js";
 
 /**
  *
@@ -73,7 +73,7 @@ export async function merge({
   fs: _fs,
   onSign,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ours,
   theirs,
   fastForwardOnly = false,
@@ -83,26 +83,26 @@ export async function merge({
   author: _author,
   committer: _committer,
   signingKey,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', _fs)
+    assertParameter("fs", _fs);
     if (signingKey) {
-      assertParameter('onSign', onSign)
+      assertParameter("onSign", onSign);
     }
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
 
-    const author = await normalizeAuthorObject({ fs, gitdir, author: _author })
-    if (!author && !fastForwardOnly) throw new MissingNameError('author')
+    const author = await normalizeAuthorObject({ fs, gitdir, author: _author });
+    if (!author && !fastForwardOnly) throw new MissingNameError("author");
 
     const committer = await normalizeCommitterObject({
       fs,
       gitdir,
       author,
-      committer: _committer,
-    })
+      committer: _committer
+    });
     if (!committer && !fastForwardOnly) {
-      throw new MissingNameError('committer')
+      throw new MissingNameError("committer");
     }
 
     return await _merge({
@@ -117,10 +117,10 @@ export async function merge({
       message,
       author,
       committer,
-      signingKey,
-    })
+      signingKey
+    });
   } catch (err) {
-    err.caller = 'git.merge'
-    throw err
+    err.caller = "git.merge";
+    throw err;
   }
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * List branches
@@ -33,20 +33,20 @@ import { join } from '../utils/join.js'
 export async function listBranches({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
-  remote,
+  gitdir = join(dir, ".git"),
+  remote
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
 
     return GitRefManager.listBranches({
       fs: new FileSystem(fs),
       gitdir,
-      remote,
-    })
+      remote
+    });
   } catch (err) {
-    err.caller = 'git.listBranches'
-    throw err
+    err.caller = "git.listBranches";
+    throw err;
   }
 }

@@ -1,4 +1,4 @@
-import { RunningMinimum } from '../models/RunningMinimum'
+import { RunningMinimum } from "../models/RunningMinimum";
 
 // Take an array of length N of
 //   iterators of length Q_n
@@ -24,37 +24,37 @@ export function* unionOfIterators(sets) {
    */
 
   // Init
-  const min = new RunningMinimum()
-  let minimum
-  const heads = []
-  const numsets = sets.length
+  const min = new RunningMinimum();
+  let minimum;
+  const heads = [];
+  const numsets = sets.length;
   for (let i = 0; i < numsets; i++) {
     // Abuse the fact that iterators continue to return 'undefined' for value
     // once they are done
-    heads[i] = sets[i].next().value
+    heads[i] = sets[i].next().value;
     if (heads[i] !== undefined) {
-      min.consider(heads[i])
+      min.consider(heads[i]);
     }
   }
-  if (min.value === null) return
+  if (min.value === null) return;
   // Iterate
   while (true) {
-    const result = []
-    minimum = min.value
-    min.reset()
+    const result = [];
+    minimum = min.value;
+    min.reset();
     for (let i = 0; i < numsets; i++) {
       if (heads[i] !== undefined && heads[i] === minimum) {
-        result[i] = heads[i]
-        heads[i] = sets[i].next().value
+        result[i] = heads[i];
+        heads[i] = sets[i].next().value;
       } else {
         // A little hacky, but eh
-        result[i] = null
+        result[i] = null;
       }
       if (heads[i] !== undefined) {
-        min.consider(heads[i])
+        min.consider(heads[i]);
       }
     }
-    yield result
-    if (min.value === null) return
+    yield result;
+    if (min.value === null) return;
   }
 }

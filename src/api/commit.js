@@ -1,13 +1,13 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _commit } from '../commands/commit.js'
-import { MissingNameError } from '../errors/MissingNameError.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
-import { normalizeAuthorObject } from '../utils/normalizeAuthorObject.js'
-import { normalizeCommitterObject } from '../utils/normalizeCommitterObject.js'
+import { _commit } from "../commands/commit.js";
+import { MissingNameError } from "../errors/MissingNameError.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
+import { normalizeAuthorObject } from "../utils/normalizeAuthorObject.js";
+import { normalizeCommitterObject } from "../utils/normalizeCommitterObject.js";
 
 /**
  * Create a new commit
@@ -55,7 +55,7 @@ export async function commit({
   fs: _fs,
   onSign,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   message,
   author: _author,
   committer: _committer,
@@ -65,26 +65,26 @@ export async function commit({
   ref,
   parent,
   tree,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('message', message)
+    assertParameter("fs", _fs);
+    assertParameter("message", message);
     if (signingKey) {
-      assertParameter('onSign', onSign)
+      assertParameter("onSign", onSign);
     }
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
 
-    const author = await normalizeAuthorObject({ fs, gitdir, author: _author })
-    if (!author) throw new MissingNameError('author')
+    const author = await normalizeAuthorObject({ fs, gitdir, author: _author });
+    if (!author) throw new MissingNameError("author");
 
     const committer = await normalizeCommitterObject({
       fs,
       gitdir,
       author,
-      committer: _committer,
-    })
-    if (!committer) throw new MissingNameError('committer')
+      committer: _committer
+    });
+    if (!committer) throw new MissingNameError("committer");
 
     return await _commit({
       fs,
@@ -99,10 +99,10 @@ export async function commit({
       noUpdateBranch,
       ref,
       parent,
-      tree,
-    })
+      tree
+    });
   } catch (err) {
-    err.caller = 'git.commit'
-    throw err
+    err.caller = "git.commit";
+    throw err;
   }
 }

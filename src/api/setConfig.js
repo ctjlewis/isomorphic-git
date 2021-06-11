@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitConfigManager } from '../managers/GitConfigManager.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { GitConfigManager } from "../managers/GitConfigManager.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Write an entry to the git config files.
@@ -51,27 +51,27 @@ import { join } from '../utils/join.js'
 export async function setConfig({
   fs: _fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   path,
   value,
-  append = false,
+  append = false
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('path', path)
+    assertParameter("fs", _fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("path", path);
     // assertParameter('value', value) // We actually allow 'undefined' as a value to unset/delete
 
-    const fs = new FileSystem(_fs)
-    const config = await GitConfigManager.get({ fs, gitdir })
+    const fs = new FileSystem(_fs);
+    const config = await GitConfigManager.get({ fs, gitdir });
     if (append) {
-      await config.append(path, value)
+      await config.append(path, value);
     } else {
-      await config.set(path, value)
+      await config.set(path, value);
     }
-    await GitConfigManager.save({ fs, gitdir, config })
+    await GitConfigManager.save({ fs, gitdir, config });
   } catch (err) {
-    err.caller = 'git.setConfig'
-    throw err
+    err.caller = "git.setConfig";
+    throw err;
   }
 }

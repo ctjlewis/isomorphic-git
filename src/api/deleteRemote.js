@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _deleteRemote } from '../commands/deleteRemote.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _deleteRemote } from "../commands/deleteRemote.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Removes the local config entry for a given remote
@@ -25,19 +25,19 @@ import { join } from '../utils/join.js'
 export async function deleteRemote({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
-  remote,
+  gitdir = join(dir, ".git"),
+  remote
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('remote', remote)
+    assertParameter("fs", fs);
+    assertParameter("remote", remote);
     return await _deleteRemote({
       fs: new FileSystem(fs),
       gitdir,
-      remote,
-    })
+      remote
+    });
   } catch (err) {
-    err.caller = 'git.deleteRemote'
-    throw err
+    err.caller = "git.deleteRemote";
+    throw err;
   }
 }

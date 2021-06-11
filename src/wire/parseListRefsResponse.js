@@ -1,4 +1,4 @@
-import { GitPktLine } from '../models/GitPktLine.js'
+import { GitPktLine } from "../models/GitPktLine.js";
 
 /**
  * @typedef {Object} ServerRef - This object has the following schema:
@@ -9,30 +9,30 @@ import { GitPktLine } from '../models/GitPktLine.js'
  */
 
 export async function parseListRefsResponse(stream) {
-  const read = GitPktLine.streamReader(stream)
+  const read = GitPktLine.streamReader(stream);
 
   // TODO: when we re-write everything to minimize memory usage,
   // we could make this a generator
-  const refs = []
+  const refs = [];
 
-  let line
+  let line;
   while (true) {
-    line = await read()
-    if (line === true) break
-    if (line === null) continue
-    line = line.toString('utf8').replace(/\n$/, '')
-    const [oid, ref, ...attrs] = line.split(' ')
-    const r = { ref, oid }
+    line = await read();
+    if (line === true) break;
+    if (line === null) continue;
+    line = line.toString("utf8").replace(/\n$/, "");
+    const [oid, ref, ...attrs] = line.split(" ");
+    const r = { ref, oid };
     for (const attr of attrs) {
-      const [name, value] = attr.split(':')
-      if (name === 'symref-target') {
-        r.target = value
-      } else if (name === 'peeled') {
-        r.peeled = value
+      const [name, value] = attr.split(":");
+      if (name === "symref-target") {
+        r.target = value;
+      } else if (name === "peeled") {
+        r.peeled = value;
       }
     }
-    refs.push(r)
+    refs.push(r);
   }
 
-  return refs
+  return refs;
 }

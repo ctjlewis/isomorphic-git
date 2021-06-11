@@ -1,4 +1,4 @@
-import { BaseError } from './BaseError.js'
+import { BaseError } from "./BaseError.js";
 
 export class MissingNameError extends BaseError {
   /**
@@ -7,10 +7,10 @@ export class MissingNameError extends BaseError {
   constructor(role) {
     super(
       `No name was provided for ${role} in the argument or in the .git/config file.`
-    )
-    this.code = this.name = MissingNameError.code
-    this.data = { role }
+    );
+    this.code = this.name = MissingNameError.code;
+    this.data = { role };
   }
 }
 /** @type {'MissingNameError'} */
-MissingNameError.code = 'MissingNameError'
+MissingNameError.code = "MissingNameError";

@@ -1,4 +1,4 @@
-import { BaseError } from './BaseError.js'
+import { BaseError } from "./BaseError.js";
 
 export class UnknownTransportError extends BaseError {
   /**
@@ -9,10 +9,10 @@ export class UnknownTransportError extends BaseError {
   constructor(url, transport, suggestion) {
     super(
       `Git remote "${url}" uses an unrecognized transport protocol: "${transport}"`
-    )
-    this.code = this.name = UnknownTransportError.code
-    this.data = { url, transport, suggestion }
+    );
+    this.code = this.name = UnknownTransportError.code;
+    this.data = { url, transport, suggestion };
   }
 }
 /** @type {'UnknownTransportError'} */
-UnknownTransportError.code = 'UnknownTransportError'
+UnknownTransportError.code = "UnknownTransportError";

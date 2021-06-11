@@ -1,11 +1,11 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitRemoteHTTP } from '../managers/GitRemoteHTTP.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { formatInfoRefs } from '../utils/formatInfoRefs.js'
-import { parseListRefsResponse } from '../wire/parseListRefsResponse.js'
-import { writeListRefsRequest } from '../wire/writeListRefsRequest.js'
+import { GitRemoteHTTP } from "../managers/GitRemoteHTTP.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { formatInfoRefs } from "../utils/formatInfoRefs.js";
+import { parseListRefsResponse } from "../wire/parseListRefsResponse.js";
+import { writeListRefsRequest } from "../wire/writeListRefsRequest.js";
 
 /**
  * Fetch a list of refs (branches, tags, etc) from a server.
@@ -114,11 +114,11 @@ export async function listServerRefs({
   protocolVersion = 2,
   prefix,
   symrefs,
-  peelTags,
+  peelTags
 }) {
   try {
-    assertParameter('http', http)
-    assertParameter('url', url)
+    assertParameter("http", http);
+    assertParameter("url", url);
 
     const remote = await GitRemoteHTTP.discover({
       http,
@@ -126,32 +126,32 @@ export async function listServerRefs({
       onAuthSuccess,
       onAuthFailure,
       corsProxy,
-      service: forPush ? 'git-receive-pack' : 'git-upload-pack',
+      service: forPush ? "git-receive-pack" : "git-upload-pack",
       url,
       headers,
-      protocolVersion,
-    })
+      protocolVersion
+    });
 
     if (remote.protocolVersion === 1) {
-      return formatInfoRefs(remote, prefix, symrefs, peelTags)
+      return formatInfoRefs(remote, prefix, symrefs, peelTags);
     }
 
     // Protocol Version 2
-    const body = await writeListRefsRequest({ prefix, symrefs, peelTags })
+    const body = await writeListRefsRequest({ prefix, symrefs, peelTags });
 
     const res = await GitRemoteHTTP.connect({
       http,
       auth: remote.auth,
       headers,
       corsProxy,
-      service: forPush ? 'git-receive-pack' : 'git-upload-pack',
+      service: forPush ? "git-receive-pack" : "git-upload-pack",
       url,
-      body,
-    })
+      body
+    });
 
-    return parseListRefsResponse(res.body)
+    return parseListRefsResponse(res.body);
   } catch (err) {
-    err.caller = 'git.listServerRefs'
-    throw err
+    err.caller = "git.listServerRefs";
+    throw err;
   }
 }

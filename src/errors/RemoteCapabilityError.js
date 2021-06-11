@@ -1,4 +1,4 @@
-import { BaseError } from './BaseError.js'
+import { BaseError } from "./BaseError.js";
 
 export class RemoteCapabilityError extends BaseError {
   /**
@@ -8,10 +8,10 @@ export class RemoteCapabilityError extends BaseError {
   constructor(capability, parameter) {
     super(
       `Remote does not support the "${capability}" so the "${parameter}" parameter cannot be used.`
-    )
-    this.code = this.name = RemoteCapabilityError.code
-    this.data = { capability, parameter }
+    );
+    this.code = this.name = RemoteCapabilityError.code;
+    this.data = { capability, parameter };
   }
 }
 /** @type {'RemoteCapabilityError'} */
-RemoteCapabilityError.code = 'RemoteCapabilityError'
+RemoteCapabilityError.code = "RemoteCapabilityError";

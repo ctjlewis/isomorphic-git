@@ -1,19 +1,19 @@
-import { GitPktLine } from '../models/GitPktLine.js'
+import { GitPktLine } from "../models/GitPktLine.js";
 
 export async function writeReceivePackRequest({
   capabilities = [],
-  triplets = [],
+  triplets = []
 }) {
-  const packstream = []
-  let capsFirstLine = `\x00 ${capabilities.join(' ')}`
+  const packstream = [];
+  let capsFirstLine = `\x00 ${capabilities.join(" ")}`;
   for (const trip of triplets) {
     packstream.push(
       GitPktLine.encode(
         `${trip.oldoid} ${trip.oid} ${trip.fullRef}${capsFirstLine}\n`
       )
-    )
-    capsFirstLine = ''
+    );
+    capsFirstLine = "";
   }
-  packstream.push(GitPktLine.flush())
-  return packstream
+  packstream.push(GitPktLine.flush());
+  return packstream;
 }

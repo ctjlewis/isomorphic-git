@@ -1,8 +1,8 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { GitAnnotatedTag } from '../models/GitAnnotatedTag.js'
-import { _writeObject as writeObject } from '../storage/writeObject.js'
+import { GitAnnotatedTag } from "../models/GitAnnotatedTag.js";
+import { _writeObject as writeObject } from "../storage/writeObject.js";
 
 /**
  * @param {object} args
@@ -14,13 +14,13 @@ import { _writeObject as writeObject } from '../storage/writeObject.js'
  */
 export async function _writeTag({ fs, gitdir, tag }) {
   // Convert object to buffer
-  const object = GitAnnotatedTag.from(tag).toObject()
+  const object = GitAnnotatedTag.from(tag).toObject();
   const oid = await writeObject({
     fs,
     gitdir,
-    type: 'tag',
+    type: "tag",
     object,
-    format: 'content',
-  })
-  return oid
+    format: "content"
+  });
+  return oid;
 }

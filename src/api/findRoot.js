@@ -1,9 +1,9 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _findRoot } from '../commands/findRoot.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
+import { _findRoot } from "../commands/findRoot.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
 
 /**
  * Find the root git directory
@@ -27,12 +27,12 @@ import { assertParameter } from '../utils/assertParameter.js'
  */
 export async function findRoot({ fs, filepath }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('filepath', filepath)
+    assertParameter("fs", fs);
+    assertParameter("filepath", filepath);
 
-    return await _findRoot({ fs: new FileSystem(fs), filepath })
+    return await _findRoot({ fs: new FileSystem(fs), filepath });
   } catch (err) {
-    err.caller = 'git.findRoot'
-    throw err
+    err.caller = "git.findRoot";
+    throw err;
   }
 }

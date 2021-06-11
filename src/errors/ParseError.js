@@ -1,4 +1,4 @@
-import { BaseError } from './BaseError.js'
+import { BaseError } from "./BaseError.js";
 
 export class ParseError extends BaseError {
   /**
@@ -6,10 +6,10 @@ export class ParseError extends BaseError {
    * @param {string} actual
    */
   constructor(expected, actual) {
-    super(`Expected "${expected}" but received "${actual}".`)
-    this.code = this.name = ParseError.code
-    this.data = { expected, actual }
+    super(`Expected "${expected}" but received "${actual}".`);
+    this.code = this.name = ParseError.code;
+    this.data = { expected, actual };
   }
 }
 /** @type {'ParseError'} */
-ParseError.code = 'ParseError'
+ParseError.code = "ParseError";

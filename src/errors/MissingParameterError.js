@@ -1,4 +1,4 @@
-import { BaseError } from './BaseError.js'
+import { BaseError } from "./BaseError.js";
 
 export class MissingParameterError extends BaseError {
   /**
@@ -7,10 +7,10 @@ export class MissingParameterError extends BaseError {
   constructor(parameter) {
     super(
       `The function requires a "${parameter}" parameter but none was provided.`
-    )
-    this.code = this.name = MissingParameterError.code
-    this.data = { parameter }
+    );
+    this.code = this.name = MissingParameterError.code;
+    this.data = { parameter };
   }
 }
 /** @type {'MissingParameterError'} */
-MissingParameterError.code = 'MissingParameterError'
+MissingParameterError.code = "MissingParameterError";

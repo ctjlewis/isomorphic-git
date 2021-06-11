@@ -1,9 +1,9 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { ObjectTypeError } from '../errors/ObjectTypeError.js'
-import { GitAnnotatedTag } from '../models/GitAnnotatedTag.js'
-import { _readObject as readObject } from '../storage/readObject.js'
+import { ObjectTypeError } from "../errors/ObjectTypeError.js";
+import { GitAnnotatedTag } from "../models/GitAnnotatedTag.js";
+import { _readObject as readObject } from "../storage/readObject.js";
 
 /**
  *
@@ -28,17 +28,17 @@ export async function _readTag({ fs, cache, gitdir, oid }) {
     cache,
     gitdir,
     oid,
-    format: 'content',
-  })
-  if (type !== 'tag') {
-    throw new ObjectTypeError(oid, type, 'tag')
+    format: "content"
+  });
+  if (type !== "tag") {
+    throw new ObjectTypeError(oid, type, "tag");
   }
-  const tag = GitAnnotatedTag.from(object)
+  const tag = GitAnnotatedTag.from(object);
   const result = {
     oid,
     tag: tag.parse(),
-    payload: tag.payload(),
-  }
+    payload: tag.payload()
+  };
   // @ts-ignore
-  return result
+  return result;
 }

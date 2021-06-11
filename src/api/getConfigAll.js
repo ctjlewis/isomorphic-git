@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _getConfigAll } from '../commands/getConfigAll.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _getConfigAll } from "../commands/getConfigAll.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Read a multi-valued entry from the git config files.
@@ -25,21 +25,21 @@ import { join } from '../utils/join.js'
 export async function getConfigAll({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
-  path,
+  gitdir = join(dir, ".git"),
+  path
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('path', path)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("path", path);
 
     return await _getConfigAll({
       fs: new FileSystem(fs),
       gitdir,
-      path,
-    })
+      path
+    });
   } catch (err) {
-    err.caller = 'git.getConfigAll'
-    throw err
+    err.caller = "git.getConfigAll";
+    throw err;
   }
 }

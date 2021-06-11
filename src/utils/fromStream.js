@@ -2,18 +2,18 @@
 // adapted from https://jakearchibald.com/2017/async-iterators-and-generators/
 export function fromStream(stream) {
   // Use native async iteration if it's available.
-  if (stream[Symbol.asyncIterator]) return stream
-  const reader = stream.getReader()
+  if (stream[Symbol.asyncIterator]) return stream;
+  const reader = stream.getReader();
   return {
     next() {
-      return reader.read()
+      return reader.read();
     },
     return() {
-      reader.releaseLock()
-      return {}
+      reader.releaseLock();
+      return {};
     },
     [Symbol.asyncIterator]() {
-      return this
-    },
-  }
+      return this;
+    }
+  };
 }

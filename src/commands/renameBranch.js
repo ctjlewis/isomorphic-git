@@ -1,11 +1,11 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import cleanGitRef from 'clean-git-ref'
+import cleanGitRef from "clean-git-ref";
 
-import { AlreadyExistsError } from '../errors/AlreadyExistsError.js'
-import { InvalidRefNameError } from '../errors/InvalidRefNameError.js'
-import { GitRefManager } from '../managers/GitRefManager.js'
+import { AlreadyExistsError } from "../errors/AlreadyExistsError.js";
+import { InvalidRefNameError } from "../errors/InvalidRefNameError.js";
+import { GitRefManager } from "../managers/GitRefManager.js";
 
 /**
  * Rename a branch
@@ -24,42 +24,42 @@ export async function _renameBranch({
   gitdir,
   oldref,
   ref,
-  checkout = false,
+  checkout = false
 }) {
   if (ref !== cleanGitRef.clean(ref)) {
-    throw new InvalidRefNameError(ref, cleanGitRef.clean(ref))
+    throw new InvalidRefNameError(ref, cleanGitRef.clean(ref));
   }
 
   if (oldref !== cleanGitRef.clean(oldref)) {
-    throw new InvalidRefNameError(oldref, cleanGitRef.clean(oldref))
+    throw new InvalidRefNameError(oldref, cleanGitRef.clean(oldref));
   }
 
-  const fulloldref = `refs/heads/${oldref}`
-  const fullnewref = `refs/heads/${ref}`
+  const fulloldref = `refs/heads/${oldref}`;
+  const fullnewref = `refs/heads/${ref}`;
 
-  const newexist = await GitRefManager.exists({ fs, gitdir, ref: fullnewref })
+  const newexist = await GitRefManager.exists({ fs, gitdir, ref: fullnewref });
 
   if (newexist) {
-    throw new AlreadyExistsError('branch', ref, false)
+    throw new AlreadyExistsError("branch", ref, false);
   }
 
   const value = await GitRefManager.resolve({
     fs,
     gitdir,
     ref: fulloldref,
-    depth: 1,
-  })
+    depth: 1
+  });
 
-  await GitRefManager.writeRef({ fs, gitdir, ref: fullnewref, value })
-  await GitRefManager.deleteRef({ fs, gitdir, ref: fulloldref })
+  await GitRefManager.writeRef({ fs, gitdir, ref: fullnewref, value });
+  await GitRefManager.deleteRef({ fs, gitdir, ref: fulloldref });
 
   if (checkout) {
     // Update HEAD
     await GitRefManager.writeSymbolicRef({
       fs,
       gitdir,
-      ref: 'HEAD',
-      value: fullnewref,
-    })
+      ref: "HEAD",
+      value: fullnewref
+    });
   }
 }

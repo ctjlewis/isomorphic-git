@@ -1,4 +1,4 @@
-import { BaseError } from './BaseError.js'
+import { BaseError } from "./BaseError.js";
 
 export class AlreadyExistsError extends BaseError {
   /**
@@ -11,12 +11,12 @@ export class AlreadyExistsError extends BaseError {
       `Failed to create ${noun} at ${where} because it already exists.${
         canForce
           ? ` (Hint: use 'force: true' parameter to overwrite existing ${noun}.)`
-          : ''
+          : ""
       }`
-    )
-    this.code = this.name = AlreadyExistsError.code
-    this.data = { noun, where, canForce }
+    );
+    this.code = this.name = AlreadyExistsError.code;
+    this.data = { noun, where, canForce };
   }
 }
 /** @type {'AlreadyExistsError'} */
-AlreadyExistsError.code = 'AlreadyExistsError'
+AlreadyExistsError.code = "AlreadyExistsError";

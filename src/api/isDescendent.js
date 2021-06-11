@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _isDescendent } from '../commands/isDescendent.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _isDescendent } from "../commands/isDescendent.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Check whether a git commit is descended from another
@@ -30,17 +30,17 @@ import { join } from '../utils/join.js'
 export async function isDescendent({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   oid,
   ancestor,
   depth = -1,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('oid', oid)
-    assertParameter('ancestor', ancestor)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("oid", oid);
+    assertParameter("ancestor", ancestor);
 
     return await _isDescendent({
       fs: new FileSystem(fs),
@@ -48,10 +48,10 @@ export async function isDescendent({
       gitdir,
       oid,
       ancestor,
-      depth,
-    })
+      depth
+    });
   } catch (err) {
-    err.caller = 'git.isDescendent'
-    throw err
+    err.caller = "git.isDescendent";
+    throw err;
   }
 }

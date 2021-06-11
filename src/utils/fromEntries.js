@@ -3,9 +3,9 @@
  */
 export function fromEntries(map) {
   /** @type {Object<string, string>} */
-  const o = {}
+  const o = {};
   for (const [key, value] of map) {
-    o[key] = value
+    o[key] = value;
   }
-  return o
+  return o;
 }

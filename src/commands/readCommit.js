@@ -1,7 +1,7 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { resolveCommit } from '../utils/resolveCommit.js'
+import { resolveCommit } from "../utils/resolveCommit.js";
 
 /**
  * @param {object} args
@@ -20,13 +20,13 @@ export async function _readCommit({ fs, cache, gitdir, oid }) {
     fs,
     cache,
     gitdir,
-    oid,
-  })
+    oid
+  });
   const result = {
     oid: commitOid,
     commit: commit.parse(),
-    payload: commit.withoutSignature(),
-  }
+    payload: commit.withoutSignature()
+  };
   // @ts-ignore
-  return result
+  return result;
 }

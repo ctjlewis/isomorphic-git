@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _findMergeBase } from '../commands/findMergeBase.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _findMergeBase } from "../commands/findMergeBase.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Find the merge base for a set of commits
@@ -20,23 +20,23 @@ import { join } from '../utils/join.js'
 export async function findMergeBase({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   oids,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('oids', oids)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("oids", oids);
 
     return await _findMergeBase({
       fs: new FileSystem(fs),
       cache,
       gitdir,
-      oids,
-    })
+      oids
+    });
   } catch (err) {
-    err.caller = 'git.findMergeBase'
-    throw err
+    err.caller = "git.findMergeBase";
+    throw err;
   }
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _packObjects } from '../commands/packObjects.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _packObjects } from "../commands/packObjects.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  *
@@ -40,25 +40,25 @@ import { join } from '../utils/join.js'
 export async function packObjects({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   oids,
   write = false,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('oids', oids)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("oids", oids);
 
     return await _packObjects({
       fs: new FileSystem(fs),
       cache,
       gitdir,
       oids,
-      write,
-    })
+      write
+    });
   } catch (err) {
-    err.caller = 'git.packObjects'
-    throw err
+    err.caller = "git.packObjects";
+    throw err;
   }
 }

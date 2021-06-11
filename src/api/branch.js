@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _branch } from '../commands/branch.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _branch } from "../commands/branch.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Create a branch
@@ -26,22 +26,22 @@ import { join } from '../utils/join.js'
 export async function branch({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ref,
-  checkout = false,
+  checkout = false
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
     return await _branch({
       fs: new FileSystem(fs),
       gitdir,
       ref,
-      checkout,
-    })
+      checkout
+    });
   } catch (err) {
-    err.caller = 'git.branch'
-    throw err
+    err.caller = "git.branch";
+    throw err;
   }
 }

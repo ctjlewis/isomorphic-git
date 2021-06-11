@@ -1,15 +1,15 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { ObjectTypeError } from '../errors/ObjectTypeError.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { GitAnnotatedTag } from '../models/GitAnnotatedTag.js'
-import { GitCommit } from '../models/GitCommit.js'
-import { GitTree } from '../models/GitTree.js'
-import { _readObject } from '../storage/readObject.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
-import { resolveFilepath } from '../utils/resolveFilepath.js'
+import { ObjectTypeError } from "../errors/ObjectTypeError.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { GitAnnotatedTag } from "../models/GitAnnotatedTag.js";
+import { GitCommit } from "../models/GitCommit.js";
+import { GitTree } from "../models/GitTree.js";
+import { _readObject } from "../storage/readObject.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
+import { resolveFilepath } from "../utils/resolveFilepath.js";
 
 /**
  *
@@ -202,73 +202,73 @@ import { resolveFilepath } from '../utils/resolveFilepath.js'
 export async function readObject({
   fs: _fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   oid,
-  format = 'parsed',
+  format = "parsed",
   filepath = undefined,
   encoding = undefined,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('oid', oid)
+    assertParameter("fs", _fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("oid", oid);
 
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
     if (filepath !== undefined) {
       oid = await resolveFilepath({
         fs,
         cache,
         gitdir,
         oid,
-        filepath,
-      })
+        filepath
+      });
     }
     // GitObjectManager does not know how to parse content, so we tweak that parameter before passing it.
-    const _format = format === 'parsed' ? 'content' : format
+    const _format = format === "parsed" ? "content" : format;
     const result = await _readObject({
       fs,
       cache,
       gitdir,
       oid,
-      format: _format,
-    })
-    result.oid = oid
-    if (format === 'parsed') {
-      result.format = 'parsed'
+      format: _format
+    });
+    result.oid = oid;
+    if (format === "parsed") {
+      result.format = "parsed";
       switch (result.type) {
-        case 'commit':
-          result.object = GitCommit.from(result.object).parse()
-          break
-        case 'tree':
-          result.object = GitTree.from(result.object).entries()
-          break
-        case 'blob':
+        case "commit":
+          result.object = GitCommit.from(result.object).parse();
+          break;
+        case "tree":
+          result.object = GitTree.from(result.object).entries();
+          break;
+        case "blob":
           // Here we consider returning a raw Buffer as the 'content' format
           // and returning a string as the 'parsed' format
           if (encoding) {
-            result.object = result.object.toString(encoding)
+            result.object = result.object.toString(encoding);
           } else {
-            result.object = new Uint8Array(result.object)
-            result.format = 'content'
+            result.object = new Uint8Array(result.object);
+            result.format = "content";
           }
-          break
-        case 'tag':
-          result.object = GitAnnotatedTag.from(result.object).parse()
-          break
+          break;
+        case "tag":
+          result.object = GitAnnotatedTag.from(result.object).parse();
+          break;
         default:
           throw new ObjectTypeError(
             result.oid,
             result.type,
-            'blob|commit|tag|tree'
-          )
+            "blob|commit|tag|tree"
+          );
       }
-    } else if (result.format === 'deflated' || result.format === 'wrapped') {
-      result.type = result.format
+    } else if (result.format === "deflated" || result.format === "wrapped") {
+      result.type = result.format;
     }
-    return result
+    return result;
   } catch (err) {
-    err.caller = 'git.readObject'
-    throw err
+    err.caller = "git.readObject";
+    throw err;
   }
 }

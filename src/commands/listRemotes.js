@@ -1,5 +1,5 @@
 // @ts-check
-import { GitConfigManager } from '../managers/GitConfigManager.js'
+import { GitConfigManager } from "../managers/GitConfigManager.js";
 
 /**
  * @param {object} args
@@ -9,13 +9,13 @@ import { GitConfigManager } from '../managers/GitConfigManager.js'
  * @returns {Promise<Array<{remote: string, url: string}>>}
  */
 export async function _listRemotes({ fs, gitdir }) {
-  const config = await GitConfigManager.get({ fs, gitdir })
-  const remoteNames = await config.getSubsections('remote')
+  const config = await GitConfigManager.get({ fs, gitdir });
+  const remoteNames = await config.getSubsections("remote");
   const remotes = Promise.all(
     remoteNames.map(async remote => {
-      const url = await config.get(`remote.${remote}.url`)
-      return { remote, url }
+      const url = await config.get(`remote.${remote}.url`);
+      return { remote, url };
     })
-  )
-  return remotes
+  );
+  return remotes;
 }

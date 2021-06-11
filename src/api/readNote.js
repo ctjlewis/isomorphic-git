@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _readNote } from '../commands/readNote.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _readNote } from "../commands/readNote.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Read the contents of a note
@@ -23,26 +23,26 @@ import { join } from '../utils/join.js'
 export async function readNote({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
-  ref = 'refs/notes/commits',
+  gitdir = join(dir, ".git"),
+  ref = "refs/notes/commits",
   oid,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
-    assertParameter('oid', oid)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
+    assertParameter("oid", oid);
 
     return await _readNote({
       fs: new FileSystem(fs),
       cache,
       gitdir,
       ref,
-      oid,
-    })
+      oid
+    });
   } catch (err) {
-    err.caller = 'git.readNote'
-    throw err
+    err.caller = "git.readNote";
+    throw err;
   }
 }

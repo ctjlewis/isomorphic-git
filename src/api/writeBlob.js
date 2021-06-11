@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { FileSystem } from '../models/FileSystem.js'
-import { _writeObject } from '../storage/writeObject'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { FileSystem } from "../models/FileSystem.js";
+import { _writeObject } from "../storage/writeObject";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Write a blob object directly
@@ -28,21 +28,21 @@ import { join } from '../utils/join.js'
  * console.log('oid', oid) // should be 'e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'
  *
  */
-export async function writeBlob({ fs, dir, gitdir = join(dir, '.git'), blob }) {
+export async function writeBlob({ fs, dir, gitdir = join(dir, ".git"), blob }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('blob', blob)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("blob", blob);
 
     return await _writeObject({
       fs: new FileSystem(fs),
       gitdir,
-      type: 'blob',
+      type: "blob",
       object: blob,
-      format: 'content',
-    })
+      format: "content"
+    });
   } catch (err) {
-    err.caller = 'git.writeBlob'
-    throw err
+    err.caller = "git.writeBlob";
+    throw err;
   }
 }

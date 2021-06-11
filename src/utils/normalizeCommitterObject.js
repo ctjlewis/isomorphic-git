@@ -1,4 +1,4 @@
-import { normalizeAuthorObject } from '../utils/normalizeAuthorObject.js'
+import { normalizeAuthorObject } from "../utils/normalizeAuthorObject.js";
 
 /**
  *
@@ -8,14 +8,15 @@ export async function normalizeCommitterObject({
   fs,
   gitdir,
   author,
-  committer,
+  committer
 }) {
-  committer = Object.assign({}, committer || author)
+  committer = Object.assign({}, committer || author);
   // Match committer's date to author's one, if omitted
   if (author) {
-    committer.timestamp = committer.timestamp || author.timestamp
-    committer.timezoneOffset = committer.timezoneOffset || author.timezoneOffset
+    committer.timestamp = committer.timestamp || author.timestamp;
+    committer.timezoneOffset =
+      committer.timezoneOffset || author.timezoneOffset;
   }
-  committer = await normalizeAuthorObject({ fs, gitdir, author: committer })
-  return committer
+  committer = await normalizeAuthorObject({ fs, gitdir, author: committer });
+  return committer;
 }

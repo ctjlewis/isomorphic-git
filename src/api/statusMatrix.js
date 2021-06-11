@@ -1,15 +1,15 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { STAGE } from '../commands/STAGE.js'
-import { TREE } from '../commands/TREE.js'
-import { WORKDIR } from '../commands/WORKDIR.js'
-import { _walk } from '../commands/walk.js'
-import { GitIgnoreManager } from '../managers/GitIgnoreManager.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
-import { worthWalking } from '../utils/worthWalking.js'
+import { STAGE } from "../commands/STAGE.js";
+import { TREE } from "../commands/TREE.js";
+import { WORKDIR } from "../commands/WORKDIR.js";
+import { _walk } from "../commands/walk.js";
+import { GitIgnoreManager } from "../managers/GitIgnoreManager.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
+import { worthWalking } from "../utils/worthWalking.js";
 
 /**
  * Efficiently get the status of multiple files at once.
@@ -154,18 +154,18 @@ import { worthWalking } from '../utils/worthWalking.js'
 export async function statusMatrix({
   fs: _fs,
   dir,
-  gitdir = join(dir, '.git'),
-  ref = 'HEAD',
-  filepaths = ['.'],
+  gitdir = join(dir, ".git"),
+  ref = "HEAD",
+  filepaths = ["."],
   filter,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
+    assertParameter("fs", _fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
 
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
     return await _walk({
       fs,
       cache,
@@ -179,52 +179,52 @@ export async function statusMatrix({
             await GitIgnoreManager.isIgnored({
               fs,
               dir,
-              filepath,
+              filepath
             })
           ) {
-            return null
+            return null;
           }
         }
         // match against base paths
         if (!filepaths.some(base => worthWalking(filepath, base))) {
-          return null
+          return null;
         }
         // Late filter against file names
         if (filter) {
-          if (!filter(filepath)) return
+          if (!filter(filepath)) return;
         }
 
         // For now, just bail on directories
-        const headType = head && (await head.type())
-        if (headType === 'tree' || headType === 'special') return
-        if (headType === 'commit') return null
+        const headType = head && (await head.type());
+        if (headType === "tree" || headType === "special") return;
+        if (headType === "commit") return null;
 
-        const workdirType = workdir && (await workdir.type())
-        if (workdirType === 'tree' || workdirType === 'special') return
+        const workdirType = workdir && (await workdir.type());
+        if (workdirType === "tree" || workdirType === "special") return;
 
-        const stageType = stage && (await stage.type())
-        if (stageType === 'commit') return null
-        if (stageType === 'tree' || stageType === 'special') return
+        const stageType = stage && (await stage.type());
+        if (stageType === "commit") return null;
+        if (stageType === "tree" || stageType === "special") return;
 
         // Figure out the oids, using the staged oid for the working dir oid if the stats match.
-        const headOid = head ? await head.oid() : undefined
-        const stageOid = stage ? await stage.oid() : undefined
-        let workdirOid
+        const headOid = head ? await head.oid() : undefined;
+        const stageOid = stage ? await stage.oid() : undefined;
+        let workdirOid;
         if (!head && workdir && !stage) {
           // We don't actually NEED the sha. Any sha will do
           // TODO: update this logic to handle N trees instead of just 3.
-          workdirOid = '42'
+          workdirOid = "42";
         } else if (workdir) {
-          workdirOid = await workdir.oid()
+          workdirOid = await workdir.oid();
         }
-        const entry = [undefined, headOid, workdirOid, stageOid]
-        const result = entry.map(value => entry.indexOf(value))
-        result.shift() // remove leading undefined entry
-        return [filepath, ...result]
-      },
-    })
+        const entry = [undefined, headOid, workdirOid, stageOid];
+        const result = entry.map(value => entry.indexOf(value));
+        result.shift(); // remove leading undefined entry
+        return [filepath, ...result];
+      }
+    });
   } catch (err) {
-    err.caller = 'git.statusMatrix'
-    throw err
+    err.caller = "git.statusMatrix";
+    throw err;
   }
 }

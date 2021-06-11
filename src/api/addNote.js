@@ -1,13 +1,13 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _addNote } from '../commands/addNote.js'
-import { MissingNameError } from '../errors/MissingNameError.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join'
-import { normalizeAuthorObject } from '../utils/normalizeAuthorObject.js'
-import { normalizeCommitterObject } from '../utils/normalizeCommitterObject.js'
+import { _addNote } from "../commands/addNote.js";
+import { MissingNameError } from "../errors/MissingNameError.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join";
+import { normalizeAuthorObject } from "../utils/normalizeAuthorObject.js";
+import { normalizeCommitterObject } from "../utils/normalizeCommitterObject.js";
 
 /**
  * Add or update an object note
@@ -41,36 +41,36 @@ export async function addNote({
   fs: _fs,
   onSign,
   dir,
-  gitdir = join(dir, '.git'),
-  ref = 'refs/notes/commits',
+  gitdir = join(dir, ".git"),
+  ref = "refs/notes/commits",
   oid,
   note,
   force,
   author: _author,
   committer: _committer,
   signingKey,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('oid', oid)
-    assertParameter('note', note)
+    assertParameter("fs", _fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("oid", oid);
+    assertParameter("note", note);
     if (signingKey) {
-      assertParameter('onSign', onSign)
+      assertParameter("onSign", onSign);
     }
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
 
-    const author = await normalizeAuthorObject({ fs, gitdir, author: _author })
-    if (!author) throw new MissingNameError('author')
+    const author = await normalizeAuthorObject({ fs, gitdir, author: _author });
+    if (!author) throw new MissingNameError("author");
 
     const committer = await normalizeCommitterObject({
       fs,
       gitdir,
       author,
-      committer: _committer,
-    })
-    if (!committer) throw new MissingNameError('committer')
+      committer: _committer
+    });
+    if (!committer) throw new MissingNameError("committer");
 
     return await _addNote({
       fs: new FileSystem(fs),
@@ -83,10 +83,10 @@ export async function addNote({
       force,
       author,
       committer,
-      signingKey,
-    })
+      signingKey
+    });
   } catch (err) {
-    err.caller = 'git.addNote'
-    throw err
+    err.caller = "git.addNote";
+    throw err;
   }
 }

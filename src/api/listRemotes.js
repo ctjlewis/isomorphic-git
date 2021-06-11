@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _listRemotes } from '../commands/listRemotes.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _listRemotes } from "../commands/listRemotes.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * List remotes
@@ -21,17 +21,17 @@ import { join } from '../utils/join.js'
  * console.log(remotes)
  *
  */
-export async function listRemotes({ fs, dir, gitdir = join(dir, '.git') }) {
+export async function listRemotes({ fs, dir, gitdir = join(dir, ".git") }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
 
     return await _listRemotes({
       fs: new FileSystem(fs),
-      gitdir,
-    })
+      gitdir
+    });
   } catch (err) {
-    err.caller = 'git.listRemotes'
-    throw err
+    err.caller = "git.listRemotes";
+    throw err;
   }
 }

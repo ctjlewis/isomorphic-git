@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { FileSystem } from '../models/FileSystem.js'
-import { _expandOid } from '../storage/expandOid.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { FileSystem } from "../models/FileSystem.js";
+import { _expandOid } from "../storage/expandOid.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Expand and resolve a short oid into a full oid
@@ -26,22 +26,22 @@ import { join } from '../utils/join.js'
 export async function expandOid({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   oid,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('oid', oid)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("oid", oid);
     return await _expandOid({
       fs: new FileSystem(fs),
       cache,
       gitdir,
-      oid,
-    })
+      oid
+    });
   } catch (err) {
-    err.caller = 'git.expandOid'
-    throw err
+    err.caller = "git.expandOid";
+    throw err;
   }
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _readTree } from '../commands/readTree.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _readTree } from "../commands/readTree.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  *
@@ -33,25 +33,25 @@ import { join } from '../utils/join.js'
 export async function readTree({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   oid,
   filepath = undefined,
-  cache = {},
+  cache = {}
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('oid', oid)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("oid", oid);
 
     return await _readTree({
       fs: new FileSystem(fs),
       cache,
       gitdir,
       oid,
-      filepath,
-    })
+      filepath
+    });
   } catch (err) {
-    err.caller = 'git.readTree'
-    throw err
+    err.caller = "git.readTree";
+    throw err;
   }
 }

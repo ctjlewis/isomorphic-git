@@ -1,6 +1,6 @@
 // @ts-check
-import { hashObject } from '../storage/hashObject.js'
-import { assertParameter } from '../utils/assertParameter.js'
+import { hashObject } from "../storage/hashObject.js";
+import { assertParameter } from "../utils/assertParameter.js";
 
 /**
  *
@@ -34,24 +34,24 @@ import { assertParameter } from '../utils/assertParameter.js'
  */
 export async function hashBlob({ object }) {
   try {
-    assertParameter('object', object)
+    assertParameter("object", object);
 
     // Convert object to buffer
-    if (typeof object === 'string') {
-      object = Buffer.from(object, 'utf8')
+    if (typeof object === "string") {
+      object = Buffer.from(object, "utf8");
     } else {
-      object = Buffer.from(object)
+      object = Buffer.from(object);
     }
 
-    const type = 'blob'
+    const type = "blob";
     const { oid, object: _object } = await hashObject({
-      type: 'blob',
-      format: 'content',
-      object,
-    })
-    return { oid, type, object: new Uint8Array(_object), format: 'wrapped' }
+      type: "blob",
+      format: "content",
+      object
+    });
+    return { oid, type, object: new Uint8Array(_object), format: "wrapped" };
   } catch (err) {
-    err.caller = 'git.hashBlob'
-    throw err
+    err.caller = "git.hashBlob";
+    throw err;
   }
 }

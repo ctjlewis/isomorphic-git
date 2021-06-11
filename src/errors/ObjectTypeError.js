@@ -1,4 +1,4 @@
-import { BaseError } from './BaseError.js'
+import { BaseError } from "./BaseError.js";
 
 export class ObjectTypeError extends BaseError {
   /**
@@ -10,12 +10,12 @@ export class ObjectTypeError extends BaseError {
   constructor(oid, actual, expected, filepath) {
     super(
       `Object ${oid} ${
-        filepath ? `at ${filepath}` : ''
+        filepath ? `at ${filepath}` : ""
       }was anticipated to be a ${expected} but it is a ${actual}.`
-    )
-    this.code = this.name = ObjectTypeError.code
-    this.data = { oid, actual, expected, filepath }
+    );
+    this.code = this.name = ObjectTypeError.code;
+    this.data = { oid, actual, expected, filepath };
   }
 }
 /** @type {'ObjectTypeError'} */
-ObjectTypeError.code = 'ObjectTypeError'
+ObjectTypeError.code = "ObjectTypeError";

@@ -1,10 +1,10 @@
 // @ts-check
-import { AlreadyExistsError } from '../errors/AlreadyExistsError.js'
-import { MissingParameterError } from '../errors/MissingParameterError.js'
-import { GitRefManager } from '../managers/GitRefManager'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter'
-import { join } from '../utils/join.js'
+import { AlreadyExistsError } from "../errors/AlreadyExistsError.js";
+import { MissingParameterError } from "../errors/MissingParameterError.js";
+import { GitRefManager } from "../managers/GitRefManager";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter";
+import { join } from "../utils/join.js";
 
 /**
  * Create a lightweight tag
@@ -27,38 +27,38 @@ import { join } from '../utils/join.js'
 export async function tag({
   fs: _fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ref,
   object,
-  force = false,
+  force = false
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
+    assertParameter("fs", _fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
 
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
 
     if (ref === undefined) {
-      throw new MissingParameterError('ref')
+      throw new MissingParameterError("ref");
     }
 
-    ref = ref.startsWith('refs/tags/') ? ref : `refs/tags/${ref}`
+    ref = ref.startsWith("refs/tags/") ? ref : `refs/tags/${ref}`;
 
     // Resolve passed object
     const value = await GitRefManager.resolve({
       fs,
       gitdir,
-      ref: object || 'HEAD',
-    })
+      ref: object || "HEAD"
+    });
 
     if (!force && (await GitRefManager.exists({ fs, gitdir, ref }))) {
-      throw new AlreadyExistsError('tag', ref)
+      throw new AlreadyExistsError("tag", ref);
     }
 
-    await GitRefManager.writeRef({ fs, gitdir, ref, value })
+    await GitRefManager.writeRef({ fs, gitdir, ref, value });
   } catch (err) {
-    err.caller = 'git.tag'
-    throw err
+    err.caller = "git.tag";
+    throw err;
   }
 }

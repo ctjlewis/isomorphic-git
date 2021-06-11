@@ -1,12 +1,12 @@
 // @ts-check
-import cleanGitRef from 'clean-git-ref'
+import cleanGitRef from "clean-git-ref";
 
-import { AlreadyExistsError } from '../errors/AlreadyExistsError.js'
-import { InvalidRefNameError } from '../errors/InvalidRefNameError.js'
-import { GitRefManager } from '../managers/GitRefManager.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { AlreadyExistsError } from "../errors/AlreadyExistsError.js";
+import { InvalidRefNameError } from "../errors/InvalidRefNameError.js";
+import { GitRefManager } from "../managers/GitRefManager.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Write a ref which refers to the specified SHA-1 object id, or a symbolic ref which refers to the specified ref.
@@ -43,26 +43,26 @@ import { join } from '../utils/join.js'
 export async function writeRef({
   fs: _fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ref,
   value,
   force = false,
-  symbolic = false,
+  symbolic = false
 }) {
   try {
-    assertParameter('fs', _fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
-    assertParameter('value', value)
+    assertParameter("fs", _fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
+    assertParameter("value", value);
 
-    const fs = new FileSystem(_fs)
+    const fs = new FileSystem(_fs);
 
     if (ref !== cleanGitRef.clean(ref)) {
-      throw new InvalidRefNameError(ref, cleanGitRef.clean(ref))
+      throw new InvalidRefNameError(ref, cleanGitRef.clean(ref));
     }
 
     if (!force && (await GitRefManager.exists({ fs, gitdir, ref }))) {
-      throw new AlreadyExistsError('ref', ref)
+      throw new AlreadyExistsError("ref", ref);
     }
 
     if (symbolic) {
@@ -70,23 +70,23 @@ export async function writeRef({
         fs,
         gitdir,
         ref,
-        value,
-      })
+        value
+      });
     } else {
       value = await GitRefManager.resolve({
         fs,
         gitdir,
-        ref: value,
-      })
+        ref: value
+      });
       await GitRefManager.writeRef({
         fs,
         gitdir,
         ref,
-        value,
-      })
+        value
+      });
     }
   } catch (err) {
-    err.caller = 'git.writeRef'
-    throw err
+    err.caller = "git.writeRef";
+    throw err;
   }
 }

@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _renameBranch } from '../commands/renameBranch.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _renameBranch } from "../commands/renameBranch.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Rename a branch
@@ -27,25 +27,25 @@ import { join } from '../utils/join.js'
 export async function renameBranch({
   fs,
   dir,
-  gitdir = join(dir, '.git'),
+  gitdir = join(dir, ".git"),
   ref,
   oldref,
-  checkout = false,
+  checkout = false
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
-    assertParameter('ref', ref)
-    assertParameter('oldref', oldref)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
+    assertParameter("ref", ref);
+    assertParameter("oldref", oldref);
     return await _renameBranch({
       fs: new FileSystem(fs),
       gitdir,
       ref,
       oldref,
-      checkout,
-    })
+      checkout
+    });
   } catch (err) {
-    err.caller = 'git.renameBranch'
-    throw err
+    err.caller = "git.renameBranch";
+    throw err;
   }
 }

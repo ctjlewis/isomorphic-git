@@ -1,10 +1,10 @@
 // @ts-check
-import '../typedefs.js'
+import "../typedefs.js";
 
-import { _init } from '../commands/init.js'
-import { FileSystem } from '../models/FileSystem.js'
-import { assertParameter } from '../utils/assertParameter.js'
-import { join } from '../utils/join.js'
+import { _init } from "../commands/init.js";
+import { FileSystem } from "../models/FileSystem.js";
+import { assertParameter } from "../utils/assertParameter.js";
+import { join } from "../utils/join.js";
 
 /**
  * Initialize a new repository
@@ -26,14 +26,14 @@ export async function init({
   fs,
   bare = false,
   dir,
-  gitdir = bare ? dir : join(dir, '.git'),
-  defaultBranch = 'master',
+  gitdir = bare ? dir : join(dir, ".git"),
+  defaultBranch = "master"
 }) {
   try {
-    assertParameter('fs', fs)
-    assertParameter('gitdir', gitdir)
+    assertParameter("fs", fs);
+    assertParameter("gitdir", gitdir);
     if (!bare) {
-      assertParameter('dir', dir)
+      assertParameter("dir", dir);
     }
 
     return await _init({
@@ -41,10 +41,10 @@ export async function init({
       bare,
       dir,
       gitdir,
-      defaultBranch,
-    })
+      defaultBranch
+    });
   } catch (err) {
-    err.caller = 'git.init'
-    throw err
+    err.caller = "git.init";
+    throw err;
   }
 }
