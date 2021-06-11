@@ -32,6 +32,7 @@ import { join } from '../utils/join.js'
  * @param {boolean} [args.relative = false] - Changes the meaning of `depth` to be measured from the current shallow depth rather than from the branch tip.
  * @param {Object<string, string>} [args.headers = {}] - Additional headers to include in HTTP requests, similar to git's `extraHeader` config
  * @param {object} [args.cache] - a [cache](cache.md) object
+ * @param {number} [args.plimit] - the concurrency limit (# of open files) for this clone
  *
  * @returns {Promise<void>} Resolves successfully when clone completes
  *
@@ -49,6 +50,7 @@ import { join } from '../utils/join.js'
  *
  */
 export async function clone({
+  plimit = Infinity,
   fs,
   http,
   onProgress,
@@ -82,7 +84,7 @@ export async function clone({
     assertParameter('url', url)
 
     return await _clone({
-      fs: new FileSystem(fs),
+      fs: new FileSystem(fs, plimit),
       cache,
       http,
       onProgress,

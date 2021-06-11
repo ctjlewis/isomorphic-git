@@ -1,3 +1,4 @@
+import pLimit from 'p-limit'
 import pify from 'pify'
 
 import { compareStrings } from '../utils/compareStrings.js'
@@ -7,8 +8,15 @@ import { dirname } from '../utils/dirname.js'
  * This is just a collection of helper functions really. At least that's how it started.
  */
 export class FileSystem {
-  constructor(fs) {
-    if (typeof fs._original_unwrapped_fs !== 'undefined') return fs
+  constructor(fs, plimit) {
+    /**
+     * Set the `this.limit(async () => {})` hook.
+     */
+    this.limit = pLimit(plimit);
+
+    if (typeof fs._original_unwrapped_fs !== 'undefined') {
+      return fs;
+    }
 
     const promises = Object.getOwnPropertyDescriptor(fs, 'promises')
     if (promises && promises.enumerable) {
@@ -64,16 +72,20 @@ export class FileSystem {
    * @returns {Promise<Buffer|string|null>}
    */
   async read(filepath, options = {}) {
-    try {
-      let buffer = await this._readFile(filepath, options)
-      // Convert plain ArrayBuffers to Buffers
-      if (typeof buffer !== 'string') {
-        buffer = Buffer.from(buffer)
+    await this.limit(
+      async () => {
+        try {
+          let buffer = await this._readFile(filepath, options)
+          // Convert plain ArrayBuffers to Buffers
+          if (typeof buffer !== 'string') {
+            buffer = Buffer.from(buffer)
+          }
+          return buffer
+        } catch (err) {
+          return null
+        }
       }
-      return buffer
-    } catch (err) {
-      return null
-    }
+    );
   }
 
   /**
@@ -84,14 +96,18 @@ export class FileSystem {
    * @param {object|string} [options]
    */
   async write(filepath, contents, options = {}) {
-    try {
-      await this._writeFile(filepath, contents, options)
-      return
-    } catch (err) {
-      // Hmm. Let's try mkdirp and try again.
-      await this.mkdir(dirname(filepath))
-      await this._writeFile(filepath, contents, options)
-    }
+    await this.limit(
+      async () => {
+        try {
+          await this._writeFile(filepath, contents, options)
+          return
+        } catch (err) {
+          // Hmm. Let's try mkdirp and try again.
+          await this.mkdir(dirname(filepath))
+          await this._writeFile(filepath, contents, options)
+        }
+      }
+    )
   }
 
   /**
