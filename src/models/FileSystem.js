@@ -50,17 +50,21 @@ export class FileSystem {
    * Rethrows errors that aren't related to file existance.
    */
   async exists(filepath, options = {}) {
-    try {
-      await this._stat(filepath)
-      return true
-    } catch (err) {
-      if (err.code === 'ENOENT' || err.code === 'ENOTDIR') {
-        return false
-      } else {
-        console.log('Unhandled error in "FileSystem.exists()" function', err)
-        throw err
+    await this.limit(
+      async () => {
+        try {
+          await this._stat(filepath)
+          return true
+        } catch (err) {
+          if (err.code === 'ENOENT' || err.code === 'ENOTDIR') {
+            return false
+          } else {
+            console.log('Unhandled error in "FileSystem.exists()" function', err)
+            throw err
+          }
+        }
       }
-    }
+    );
   }
 
   /**
@@ -114,48 +118,60 @@ export class FileSystem {
    * Make a directory (or series of nested directories) without throwing an error if it already exists.
    */
   async mkdir(filepath, _selfCall = false) {
-    try {
-      await this._mkdir(filepath)
-      return
-    } catch (err) {
-      // If err is null then operation succeeded!
-      if (err === null) return
-      // If the directory already exists, that's OK!
-      if (err.code === 'EEXIST') return
-      // Avoid infinite loops of failure
-      if (_selfCall) throw err
-      // If we got a "no such file or directory error" backup and try again.
-      if (err.code === 'ENOENT') {
-        const parent = dirname(filepath)
-        // Check to see if we've gone too far
-        if (parent === '.' || parent === '/' || parent === filepath) throw err
-        // Infinite recursion, what could go wrong?
-        await this.mkdir(parent)
-        await this.mkdir(filepath, true)
+    await this.limit(
+      async () => {
+        try {
+          await this._mkdir(filepath)
+          return
+        } catch (err) {
+          // If err is null then operation succeeded!
+          if (err === null) return
+          // If the directory already exists, that's OK!
+          if (err.code === 'EEXIST') return
+          // Avoid infinite loops of failure
+          if (_selfCall) throw err
+          // If we got a "no such file or directory error" backup and try again.
+          if (err.code === 'ENOENT') {
+            const parent = dirname(filepath)
+            // Check to see if we've gone too far
+            if (parent === '.' || parent === '/' || parent === filepath) throw err
+            // Infinite recursion, what could go wrong?
+            await this.mkdir(parent)
+            await this.mkdir(filepath, true)
+          }
+        }
       }
-    }
+    );
   }
 
   /**
    * Delete a file without throwing an error if it is already deleted.
    */
   async rm(filepath) {
-    try {
-      await this._unlink(filepath)
-    } catch (err) {
-      if (err.code !== 'ENOENT') throw err
-    }
+    await this.limit(
+      async () => {
+        try {
+          await this._unlink(filepath)
+        } catch (err) {
+          if (err.code !== 'ENOENT') throw err
+        }
+      }
+    )
   }
 
   /**
    * Delete a directory without throwing an error if it is already deleted.
    */
   async rmdir(filepath) {
-    try {
-      await this._rmdir(filepath)
-    } catch (err) {
-      if (err.code !== 'ENOENT') throw err
-    }
+    await this.limit(
+      async () => {
+        try {
+          await this._rmdir(filepath)
+        } catch (err) {
+          if (err.code !== 'ENOENT') throw err
+        }
+      }
+    )
   }
 
   /**
@@ -175,22 +191,42 @@ export class FileSystem {
   }
 
   /**
-   * Return a flast list of all the files nested inside a directory
+   * Return a flat list of all the files nested inside a directory
    *
    * Based on an elegant concurrent recursive solution from SO
    * https://stackoverflow.com/a/45130990/2168416
    */
   async readdirDeep(dir) {
-    const subdirs = await this._readdir(dir)
-    const files = await Promise.all(
-      subdirs.map(async subdir => {
-        const res = dir + '/' + subdir
-        return (await this._stat(res)).isDirectory()
-          ? this.readdirDeep(res)
-          : res
-      })
+    await this.limit(
+      async () => {
+        const subdirs = await this._readdir(dir)
+        const files = await Promise.all(
+          subdirs.map(async subdir => {
+            const res = dir + '/' + subdir
+            return (await this._stat(res)).isDirectory()
+              ? this.readdirDeep(res)
+              : res
+          })
+        )
+        return files.reduce((a, f) => a.concat(f), [])
+      }
     )
-    return files.reduce((a, f) => a.concat(f), [])
+    /**
+     * @todo
+     * Limit readdir.
+     */
+    // const files = await Promise.all(
+    //   subdirs.map(
+    //     (subdir) => async () => {
+    //       const res = dir + '/' + subdir
+    //       return (await this._stat(res)).isDirectory()
+    //         ? this.readdirDeep(res)
+    //         : res
+    //     }
+    //   ).map(
+    //     (filesPromise) => this.limit(filesPromise)
+    //   )
+    // )
   }
 
   /**
@@ -198,15 +234,19 @@ export class FileSystem {
    * Rethrows errors that aren't related to file existance.
    */
   async lstat(filename) {
-    try {
-      const stats = await this._lstat(filename)
-      return stats
-    } catch (err) {
-      if (err.code === 'ENOENT') {
-        return null
+    await this.limit(
+      async () => {
+        try {
+          const stats = await this._lstat(filename)
+          return stats
+        } catch (err) {
+          if (err.code === 'ENOENT') {
+            return null
+          }
+          throw err
+        }
       }
-      throw err
-    }
+    )
   }
 
   /**
@@ -216,14 +256,18 @@ export class FileSystem {
   async readlink(filename, opts = { encoding: 'buffer' }) {
     // Note: FileSystem.readlink returns a buffer by default
     // so we can dump it into GitObject.write just like any other file.
-    try {
-      return this._readlink(filename, opts)
-    } catch (err) {
-      if (err.code === 'ENOENT') {
-        return null
+    await this.limit(
+      async () => {
+        try {
+          return this._readlink(filename, opts)
+        } catch (err) {
+          if (err.code === 'ENOENT') {
+            return null
+          }
+          throw err
+        }
       }
-      throw err
-    }
+    )
   }
 
   /**
